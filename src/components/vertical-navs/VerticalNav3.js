@@ -21,7 +21,7 @@ import PersonIcon from '@material-ui/icons/Person';
 
 import { useHistory } from "react-router-dom";
 
-import TicketForm from '../dialog/TicketDialogue';
+import TicketForm from '../dialog/TicketDialog';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -109,7 +109,7 @@ export default function Navigation(props) {
     'faceMem': (Array.isArray(props.bucketFaceMem) ? props.bucketFaceMem : [])
   }
 
-  const [bucketToLoad, setBucketToLoad] = React.useState('chatMem')
+  const [bucketToLoad, setBucketToLoad] = React.useState('main')
 
   const handleClickRobots = () => {
     setBucketToLoad('main');

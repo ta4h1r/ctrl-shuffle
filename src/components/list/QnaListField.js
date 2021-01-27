@@ -10,7 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { Tooltip } from '@material-ui/core';
 
-import NewField from '../form-fields/NewField';
+import NewField from '../fields/NewField';
 
 const useStyles = makeStyles((theme) => ({
   root: {

@@ -1,14 +1,14 @@
 import React from 'react';
 
+import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
+import CreateTicket from '../forms/CreateTicket';
 import { makeStyles } from '@material-ui/core';
-
-import UpdateQnaIntent from '../form-fields/UpdateQnaIntent'
 
 const useStyles = makeStyles((theme) => ({
   reportIssueButton: {
@@ -16,36 +16,36 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function FormDialog({
-  setTableData,
-  tableChanges,
-  setTableChanges,
-  open,
-  handleClose,
-  rowData }) {
+export default function FormDialog() {
 
   const classes = useStyles()
+  const [open, setOpen] = React.useState(false);
 
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+  
   return (
     <div>
+      <Button className={classes.reportIssueButton} color="inherit" onClick={handleClickOpen}>
+        Report Issue
+      </Button>
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title">Update data</DialogTitle>
+        <DialogTitle id="form-dialog-title">Submit a Ticket</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Edit your question and answer data below and then click submit.
+            To report an issue, please fill out all the fields below and click submit.
           </DialogContentText>
-
-          <UpdateQnaIntent
-            setTableData={setTableData}
-            tableChanges={tableChanges}
-            setTableChanges={setTableChanges}
-            closeDialogFunction={handleClose}
-            rowData={rowData}
-          />
+          
+          <CreateTicket closeDialogFunction={handleClose}/>
 
         </DialogContent>
         <DialogActions>
-          {/** ... */}
+             {/** ... */}
         </DialogActions>
       </Dialog>
     </div>

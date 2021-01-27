@@ -8,7 +8,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 import { makeStyles } from '@material-ui/core';
 
-import NewQnaIntent from '../form-fields/NewQnaIntent'
+import NewQnaIntent from '../forms/NewQnaIntent'
 
 const useStyles = makeStyles((theme) => ({
   reportIssueButton: {

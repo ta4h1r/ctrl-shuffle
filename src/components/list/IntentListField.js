@@ -10,9 +10,8 @@ import Typography from '@material-ui/core/Typography';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { Tooltip } from '@material-ui/core';
 
-import NewField from '../form-fields/NewField';
 import EditIcon from '@material-ui/icons/Edit';
-import EditIntentField from '../form-fields/EditIntentField';
+import EditIntentField from '../fields/EditIntentField';
 
 const useStyles = makeStyles((theme) => ({
   root: {

@@ -117,9 +117,8 @@ class FormFields extends Component {
             intent: intent
         }
 
-        this.showAlert('updating');
-
         if (dataReady) {
+            this.showAlert('updating');
             axios.post(`${baseUrl}`, requestData)
                 .then(() => {
                     this.fetchData();
