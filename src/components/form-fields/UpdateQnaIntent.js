@@ -11,6 +11,7 @@ import PropTypes from 'prop-types';
 import QnaListField from '../list/QnaListField'
 import IntentListField from '../list/IntentListField'
 import DeleteAlertDialog from '../dialog/DeleteAlertDialog'
+import { AlexaForBusiness } from 'aws-sdk';
 
 const baseUrl = 'https://n0kytdfoic.execute-api.us-east-1.amazonaws.com/prod';
 
@@ -53,7 +54,7 @@ class FormFields extends Component {
 
         this.onDelete = this.onDelete.bind(this);
 
-        this.handleClose = this.handleClose.bind(this);
+        this.handleCloseSnackbar = this.handleCloseSnackbar.bind(this);
 
         this.state = {
             handleClose: this.props.closeDialogFunction,
@@ -118,12 +119,16 @@ class FormFields extends Component {
 
         const originalIntent = this.props.rowData.intent;
 
+        this.showAlert('updating');
+
         axios.put(`${baseUrl}/${originalIntent}`, requestData)
             .then(() => {
-                this.fetchData()
+                this.fetchData();
+                this.showAlert('updated');
             })
             .catch(() => {
-                alert('Failed.')
+                console.error(err);
+                this.showAlert('failed');
             });
 
     }
@@ -222,22 +227,37 @@ class FormFields extends Component {
 
     onDelete(ev) {
         ev.preventDefault();  //to stop the form submitting
+        this.showAlert('updating');
         const originalIntent = this.props.rowData.intent;
         axios.delete(`${baseUrl}/${originalIntent}`, null)
             .then(() => {
                 this.fetchData()
                 this.showAlert('deleteSuccess');
-
             })
             .catch(() => {
-                alert('Failed.')
+                this.showAlert('failed')
             });
 
-        this.closeDeleteAlertDialog()
+        this.closeDeleteAlertDialog();
     }
 
     showAlert(type) {
         switch (type) {
+            case 'failed':
+                this.setState({
+                    showFailedUpdateAlert: true
+                })
+                break;
+            case 'updating':
+                this.setState({
+                    showUpdatingAlert: true
+                })
+                break;
+            case 'updated':
+                this.setState({
+                    showUpdatedAlert: true
+                })
+                break;
             case 'deleteSuccess':
                 this.setState({
                     showDeleteSuccessAlert: true
@@ -246,9 +266,12 @@ class FormFields extends Component {
         }
     }
 
-    handleClose() {
+    handleCloseSnackbar() {
         this.setState({
-            showDeleteSuccessAlert: false
+            showDeleteSuccessAlert: false,
+            showUpdatedAlert: false,
+            showUpdatingAlert: false, 
+            showFailedUpdateAlert: false,
         })
     }
 
@@ -318,13 +341,30 @@ class FormFields extends Component {
                 <DeleteAlertDialog handleDelete={this.onDelete} showDialog={this.state.showDeleteAlertDialog} handleClose={this.closeDeleteAlertDialog} />
 
 
-                <Snackbar open={this.state.showDeleteSuccessAlert} autoHideDuration={6000} onClose={this.handleClose}>
-                    <Alert severity="success">
-                        <AlertTitle>Success</AlertTitle>
-                            This is a success alert — <strong>check it out!</strong>
+                <Snackbar open={this.state.showUpdatingAlert} onClose={this.handleCloseSnackbar}>
+                    <Alert severity="info">
+                        <AlertTitle>Info</AlertTitle>
+                            Updating data...
                     </Alert>
                 </Snackbar>
-
+                <Snackbar open={this.state.showDeleteSuccessAlert} autoHideDuration={2000} onClose={this.handleCloseSnackbar}>
+                    <Alert severity="success">
+                        <AlertTitle>Success</AlertTitle>
+                            Successfully deleted.
+                    </Alert>
+                </Snackbar>
+                <Snackbar open={this.state.showUpdatedAlert} autoHideDuration={2000} onClose={this.handleCloseSnackbar}>
+                    <Alert severity="success">
+                        <AlertTitle>Success</AlertTitle>
+                            Successfully updated.
+                    </Alert>
+                </Snackbar>
+                <Snackbar open={this.state.showFailedUpdateAlert} autoHideDuration={2000} onClose={this.handleCloseSnackbar}>
+                    <Alert severity="error">
+                        <AlertTitle>Error</AlertTitle>
+                            Failed to update.
+                    </Alert>
+                </Snackbar>
 
             </div>
         );

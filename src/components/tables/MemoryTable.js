@@ -10,8 +10,7 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 
 
-import QnaDialogue from '../dialog/QnaDialogue';
-import NewQuestionButton from '../buttons/NewQuestionButton';
+import QnaDialogue from '../dialog/EditQnaDialogue';
 
 const columns = [
   {

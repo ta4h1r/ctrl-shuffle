@@ -12,7 +12,7 @@ import QnaListField from '../list/QnaListField'
 import IntentListField from '../list/IntentListField'
 import DeleteAlertDialog from '../dialog/DeleteAlertDialog'
 
-const baseUrl = 'https://n0kytdfoic.execute-api.us-east-1.amazonaws.com/prod';
+const baseUrl = 'https://bgxan3yqs5.execute-api.us-east-1.amazonaws.com/prod'
 
 const useStyles = (theme) => ({
     root: {
@@ -57,14 +57,14 @@ class FormFields extends Component {
 
         this.state = {
             handleClose: this.props.closeDialogFunction,
-            questionData: [],
+            questionData: [this.props.rowData.question],
             answerData: [],
             intentData: [],
             q: '',
             a: '',
             i: '',
             showDeleteAlertDialog: false,
-            showEditField: true,
+            showEditField: false,
         };
     }
 
@@ -108,9 +108,6 @@ class FormFields extends Component {
             return el != "";
         });
 
-        const dataReady = (qs.length > 0) &&
-            (as.length > 0) && (intent.length > 0);
-
         const requestData = {
             questions: filtered_qs,
             answers: filtered_as,
@@ -119,49 +116,16 @@ class FormFields extends Component {
 
         this.showAlert('updating');
 
-        if (dataReady) {
-            axios.post(`${baseUrl}`, requestData)
-                .then(() => {
-                    this.fetchData();
-                    this.showAlert('updated');
-                })
-                .catch((err) => {
-                    console.error(err);
-                    this.showAlert('failed')
-                });
-        } else {
-            alert("All fields are required to have at least one value.")
-        }
-
-
-
-    }
-    onDelete(ev) {
-        ev.preventDefault();  //to stop the form submitting
-        this.showAlert('updating');
-        try {
-            const originalIntent = this.props.rowData.intent;
-            axios.delete(`${baseUrl}/${originalIntent}`, null)
-                .then(() => {
-                    this.fetchData()
-                    this.showAlert('deleteSuccess');
-                })
-                .catch((err) => {
-                    console.error(err)
-                    this.showAlert('failed');
-                });
-
-            this.closeDeleteAlertDialog()
-        } catch (err) {
-            console.error('onDelete Exception: ', err);
-            this.setState({
-                intentData: [],
-                questionData: [],
-                answerData: [],
+        axios.post(`${baseUrl}`, requestData)
+            .then(() => {
+                this.fetchData();
+                this.showAlert('updated');
             })
-            this.closeDeleteAlertDialog()
-            this.showAlert('failed');
-        }
+            .catch((err) => {
+                console.error(err);
+                this.showAlert('failed');
+            });
+
     }
 
     fetchData() {
@@ -256,7 +220,36 @@ class FormFields extends Component {
         })
     }
 
+    onDelete(ev) {
+        ev.preventDefault();  //to stop the form submitting
+        this.showAlert('updating');
+
+        const qs = this.state.questionData;
+
+        //Removing empty strings 
+        var filtered_qs = qs.filter(function (el) {
+            return el != "";
+        });
+
+        const requestData = {
+            questions: filtered_qs,
+        }
+
+        axios.delete(`${baseUrl}`, requestData)
+            .then(() => {
+                this.fetchData()
+                this.showAlert('deleteSuccess');
+            })
+            .catch((err) => {
+                console.error(err);
+                this.showAlert('failed')
+            });
+
+        this.closeDeleteAlertDialog();
+    }
+
     showAlert(type) {
+        this.handleCloseSnackbar();
         switch (type) {
             case 'failed':
                 this.setState({
@@ -380,6 +373,7 @@ class FormFields extends Component {
                             Failed to update.
                     </Alert>
                 </Snackbar>
+
 
             </div>
         );

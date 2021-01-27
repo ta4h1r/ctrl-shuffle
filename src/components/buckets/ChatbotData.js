@@ -7,6 +7,7 @@ import Tab from '@material-ui/core/Tab';
 
 import NewQuestionButton from '../buttons/NewQuestionButton';
 import MemoryTable from '../tables/MemoryTable';
+import UnansweredTable from '../tables/UnansweredTable';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -130,7 +131,7 @@ export default function ScrollableTabsButtonAuto() {
           <MemoryTable liftTableState={setTableState}/>
         </TabPanel>
         <TabPanel value={value} index={1}>
-          Unanswered
+          <UnansweredTable liftTableState={setTableState} dialogProps={dialogProps} handleRowClick={handleClick}/>
         </TabPanel>
       </div>
 
