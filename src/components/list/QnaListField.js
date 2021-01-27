@@ -21,16 +21,15 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flewGrow: 1,
     flexWrap: 'nowrap',
-    // borderStyle: 'solid', borderWidth: '1px', borderColor: 'white',
+    width: '100%',
+    borderStyle: 'solid', borderWidth: '0px', borderColor: 'white',
     '& .MuiIconButton-root': {
-      // borderStyle: 'solid', borderWidth: '1px', borderColor: 'red',
       margin: theme.spacing(1),
-
-
     }
   },
   demo: {
     backgroundColor: theme.palette.background.paper,
+    borderStyle: 'solid', borderWidth: '0px', borderColor: 'red',
   },
   title: {
     margin: theme.spacing(4, 0, 2),
@@ -87,7 +86,7 @@ export default function InteractiveList({
   return (
     <div className={classes.root}>
 
-      <Grid item xs={12} md={6}>
+      <Grid item xs={12} md={12}>
         <Typography variant="h6" className={classes.title}>
           {capitalizeFirstLetterAndAddS(category)}
           </Typography>

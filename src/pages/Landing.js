@@ -38,15 +38,15 @@ function Landing() {
           header: 'Team',
           description:
             "We're a nimble start up building technology for the upcoming automation revolution.",
-          '01_image': '/images/steve.jpg',
+          '01_image': './images/steve.jpg',
           '01_name': 'Steven Pinto',
           '01_description':
             "When I'm not obsessively stressing about the fate of Pied Piper, I sometimes give lectures to school kids.",
-          '02_image': '/images/nik.jpg',
+          '02_image': './images/nik.jpg',
           '02_name': 'Nikhil Ranchod',
           '02_description':
             'I am the absolute best programmer at Pied Piper (especially better than Gilfoyle).',
-          '03_image': '/images/2-cropped.jpg',
+          '03_image': './images/2-cropped.jpg',
           '03_name': 'Taahir Bhaiyat',
           '03_description':
             'I work on Pied Piper only for the advanced technology! The Team need me to put out their fires, so I stay.',

@@ -14,12 +14,12 @@ export default function Fleet() {
         content={{
           brand: {
             text: 'CTRL Robotics ',
-            image: '/images/ctrl.svg',
+            image: './images/ctrl.svg',
             width: '56',
           },
           'brand-small': {
             text: '',
-            image: '/images/ctrl.svg',
+            image: './images/ctrl.svg',
             width: '32',
           },
           link1: 'Robots',
