@@ -75,10 +75,10 @@ export default function Navigation(props) {
         </Link>
 
         <Tabs value={props.pageValue} className={classes.tabs}>
-          <Tab href="/" component={Link} label="About Us" color="inherit" className={classes.tab} />
-          <Tab href="/products" component={Link} label="Products" color="inherit" className={classes.tab} />
-          <Tab href="/contact" component={Link} label="Contact" color="inherit" className={classes.tab} />
-          <Tab href="/login" component={Link} label="Login" color="inherit" className={classes.tab} />
+          <Tab href="/landing" component={Link} label="About Us" color="inherit" className={classes.tab} />
+          <Tab href="./products" component={Link} label="Products" color="inherit" className={classes.tab} />
+          <Tab href="./contact" component={Link} label="Contact" color="inherit" className={classes.tab} />
+          <Tab href="./login" component={Link} label="Login" color="inherit" className={classes.tab} />
         </Tabs>
 
       </Toolbar>

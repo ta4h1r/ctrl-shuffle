@@ -16,22 +16,22 @@ export default function App() {
   return (
     <Router>
         <Switch>
-          <Route exact path="/">
+          <Route exact path="/landing">
             <IndexPage />
           </Route>
-          <Route exact path="/fleet">
+          <Route path="/landing/fleet">
             <FleetPage />
           </Route>
-          <Route exact path="/products">
+          <Route path="/landing/products">
             <ProductsPage />
           </Route>
-          <Route exact path="/contact">
+          <Route path="/landing/contact">
             <ContactPage />
           </Route>
-          <Route exact path="/login">
+          <Route path="/landing/login">
             <LoginPage />
           </Route>
-          <Route exact path="/signup">
+          <Route path="/landing/signup">
             <SignupPage />
           </Route>
         </Switch>

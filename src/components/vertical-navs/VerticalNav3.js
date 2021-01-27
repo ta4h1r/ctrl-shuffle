@@ -129,7 +129,7 @@ export default function Navigation(props) {
 
   const logout = () => {
     sessionStorage.clear();
-    history.push('/login');
+    history.push('./login');
   }
 
   const jsxList = [

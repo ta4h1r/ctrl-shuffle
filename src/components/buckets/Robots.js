@@ -125,7 +125,7 @@ function Robots() {
             </>
         );
     } else if (!sessionStorage.getItem("skyKey")) {
-        return <> {history.push("/login")}; </>;
+        return <> {history.push("./login")}; </>;
     } else {
         return (
             <>

@@ -79,7 +79,7 @@ export default function Form(props) {
       }
 
       if (permission == "granted") {
-        window.location.href="/fleet";                       // Render Dashboard
+        window.location.href="./fleet";                       // Render Dashboard
       } else if (permission == "denied") {
         alert("Incorrect password and username combination"); 
       }
