@@ -235,7 +235,11 @@ class FormFields extends Component {
             questions: filtered_qs,
         }
 
-        axios.delete(`${baseUrl}`, requestData)
+        console.log(requestData);
+
+        axios.delete(`${baseUrl}`, {
+            data: requestData,
+        })
             .then(() => {
                 this.fetchData()
                 this.showAlert('deleteSuccess');
