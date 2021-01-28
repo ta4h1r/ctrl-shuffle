@@ -1,6 +1,6 @@
 import React from 'react';
 
-import HorizontalNav7 from '../components/horizontal-navs/HorizontalNav7';
+import HorizontalNav7 from '../components/navs/HorizontalNav7';
 import Pricing1 from '../components/pricing/Pricing1';
 
 export default function Products() {

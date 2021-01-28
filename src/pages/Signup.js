@@ -1,6 +1,6 @@
 import React from 'react';
 
-import HorizontalNav7 from '../components/horizontal-navs/HorizontalNav7';
+import HorizontalNav7 from '../components/navs/HorizontalNav7';
 import SignIn1 from '../components/sign-in/SignIn1';
 
 export default function Signup() {
