@@ -1,6 +1,6 @@
 import React from 'react';
 
-import HorizontalNav7 from '../components/horizontal-navs/HorizontalNav7';
+import HorizontalNav7 from '../components/navs/HorizontalNav7';
 import Footer from '../components/footers/Footer';
 import Landing from './Landing';
 
