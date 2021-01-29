@@ -7,6 +7,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 export default function AlertDialog({
+  deleteMessage,
   handleDelete,
   showDialog, 
   handleClose}) {
@@ -19,11 +20,10 @@ export default function AlertDialog({
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{"Delete all data?"}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{"Confirm Delete"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            If an intent is deleted, all associated question and answer data will be lost.
-            Proceed?
+            {deleteMessage ? deleteMessage : 'Delete data?'}
           </DialogContentText>
         </DialogContent>
         <DialogActions>

@@ -1,4 +1,4 @@
-import React from 'react';
+ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -58,6 +58,7 @@ export default function InteractiveList({
     listJsx: [],
   });
 
+
   React.useEffect(() => {
     let dataList = data.map((item, index) => {
 
@@ -70,11 +71,6 @@ export default function InteractiveList({
             <Tooltip arrow title="Edit intent name">
               <IconButton onClick={() => handleClickEdit(item)} color="primary" edge="end" aria-label="delete">
                 <EditIcon />
-              </IconButton>
-            </Tooltip>
-            <Tooltip arrow title="Delete intent">
-              <IconButton onClick={() => handleClickDelete(item)} color="secondary" edge="end" aria-label="delete">
-                <DeleteIcon />
               </IconButton>
             </Tooltip>
           </ListItemSecondaryAction>

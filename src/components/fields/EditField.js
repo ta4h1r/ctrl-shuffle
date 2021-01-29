@@ -38,7 +38,7 @@ export default function EditIntentField({
                 autoFocus
                 margin="dense"
                 id={`${category}-field`}
-                label={`New ${category} name`}
+                label={category == 'name' ? `New ${category}` : `New ${category} name`}
                 fullWidth
                 controlled="true"
             />

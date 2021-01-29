@@ -85,6 +85,7 @@ function Robots() {
                     }
 
                     setRobotsList(fetchedRobots);
+                    setLoading(false);
 
                 });
         }
@@ -96,7 +97,6 @@ function Robots() {
         if (fArray) {
             if (!firebase.apps.length) {
                 firebase.initializeApp(fArray[0]);
-                setLoading(false);
             }
         }
 

@@ -201,6 +201,7 @@ class FormFields extends Component {
 
     handleClickDeleteIntent() {
         this.setState({
+            deleteMessage: 'If an intent is deleted, all associated question and answer data will be lost. Proceed?',
             showDeleteAlertDialog: true,
         })
     }
@@ -343,7 +344,7 @@ class FormFields extends Component {
                 </div>
 
 
-                <DeleteAlertDialog handleDelete={this.onDelete} showDialog={this.state.showDeleteAlertDialog} handleClose={this.closeDeleteAlertDialog} />
+                <DeleteAlertDialog deleteMessage={this.state.deleteMessage} handleDelete={this.onDelete} showDialog={this.state.showDeleteAlertDialog} handleClose={this.closeDeleteAlertDialog} />
 
 
                 <Snackbar open={this.state.showUpdatingAlert} onClose={this.handleCloseSnackbar}>
