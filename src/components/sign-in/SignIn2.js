@@ -78,8 +78,8 @@ export default function Form(props) {
         permission = "denied"
       }
 
-      if (permission == "granted") {
-        window.location.href="./fleet";                       // Render Dashboard
+      if (permission === "granted") {
+        window.location.href="https://ctrlrobotics.com/landing/fleet";                       // Render Dashboard
       } else if (permission == "denied") {
         alert("Incorrect password and username combination"); 
       }
