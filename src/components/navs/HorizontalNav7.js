@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up('lg')]: {
       position: 'absolute', 
       left: '50%', 
-      top: '50%',
+      top: '63%',
       transform: 'translate(-50%, -50%)'
     },
     [theme.breakpoints.down('md')]: {
