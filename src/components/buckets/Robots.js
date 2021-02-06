@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function Robots() {
+function Robots(props) {
     const classes = useStyles();
 
     const history = useHistory();
@@ -84,6 +84,7 @@ function Robots() {
                         });
                     }
 
+                    props.liftRobotsList(fetchedRobots)
                     setRobotsList(fetchedRobots);
                     setLoading(false);
 
@@ -97,10 +98,12 @@ function Robots() {
         if (fArray) {
             if (!firebase.apps.length) {
                 firebase.initializeApp(fArray[0]);
+                props.liftFirebase(firebase); 
             }
         }
 
     }, []);
+
 
     // Render Dash on access granted, else push to login page
     if (sessionStorage.getItem("skyKey") == "granted" && !isLoading) {

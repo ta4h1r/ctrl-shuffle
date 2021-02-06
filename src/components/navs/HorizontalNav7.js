@@ -54,6 +54,7 @@ export default function Navigation(props) {
   let brand = content['brand'].text || '';
   let brandSmall = content['brand-small'].text || '';
 
+  console.log(content['brand'].image); 
   if (content['brand'].image) {
     brand = <img src={ content['brand'].image } alt="" width={ content['brand'].width } />;
   }
@@ -76,9 +77,9 @@ export default function Navigation(props) {
 
         <Tabs value={props.pageValue} className={classes.tabs}>
           <Tab href="/landing" component={Link} label="About Us" color="inherit" className={classes.tab} />
-          <Tab href="./products" component={Link} label="Products" color="inherit" className={classes.tab} />
-          <Tab href="./contact" component={Link} label="Contact" color="inherit" className={classes.tab} />
-          <Tab href="./login" component={Link} label="Login" color="inherit" className={classes.tab} />
+          <Tab href="/landing/products" component={Link} label="Products" color="inherit" className={classes.tab} />
+          <Tab href="/landing/contact" component={Link} label="Contact" color="inherit" className={classes.tab} />
+          <Tab href="/landing/login" component={Link} label="Login" color="inherit" className={classes.tab} />
         </Tabs>
 
       </Toolbar>

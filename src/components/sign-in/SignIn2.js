@@ -79,7 +79,7 @@ export default function Form(props) {
       }
 
       if (permission === "granted") {
-        window.location.href="https://ctrlrobotics.com/landing/fleet";                       // Render Dashboard
+        window.location.href="/landing/fleet";                       // Render Dashboard
       } else if (permission == "denied") {
         alert("Incorrect password and username combination"); 
       }

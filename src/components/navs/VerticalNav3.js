@@ -22,6 +22,7 @@ import PersonIcon from '@material-ui/icons/Person';
 import { useHistory } from "react-router-dom";
 
 import TicketForm from '../dialog/TicketDialog';
+import NotificationPanel from '../notification/NotificationPanel';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -165,6 +166,7 @@ export default function Navigation(props) {
     <div className={classes.root}>
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
+
           <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu" onClick={toggleDrawer(true)}>
             <MenuIcon />
           </IconButton>
@@ -174,8 +176,11 @@ export default function Navigation(props) {
           <Link href="#" variant="h5" color="inherit" underline="none" className={classes.linkBrandSmall}>
             {brandSmall}
           </Link>
+
+          <NotificationPanel firebase={props.firebase} robotsList={props.robotsList}/>
           <TicketForm className={classes.secondaryButton} classes={classes} />
           <Button onClick={logout} variant="contained" color="secondary">{content['primary-action']}</Button>
+        
         </Toolbar>
       </AppBar>
 

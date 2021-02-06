@@ -8,7 +8,18 @@ import Analysis from '../components/buckets/Analysis';
 import ChatData from '../components/buckets/ChatbotData';
 import FaceData from '../components/buckets/FaceData';
 
-export default function Fleet() {
+export default function Fleet(props) {
+
+  const [firebase, setFirebase] = React.useState([]);
+  const [robotsList, setRobotsList] = React.useState([]);
+
+  const liftFirebaseState = (firebase) => {
+    setFirebase(firebase);
+  }
+  const liftRobotsList =(fetchedRobots) => {
+    setRobotsList(fetchedRobots);
+  }
+
   return (
     <React.Fragment>
       <VerticalNav3
@@ -30,10 +41,14 @@ export default function Fleet() {
           'secondary-action': 'Report Issue',
           'primary-action': 'Logout',
         }}
-        bucketMain={[<StructureDiv bucket1={[<Robots/>]} />]}
+        
+        bucketMain={[<StructureDiv bucket1={[<Robots liftFirebase={liftFirebaseState} liftRobotsList={liftRobotsList}/>]} />]}
         bucketAnalytics={[<StructureDiv bucket1={[<Analysis/>]} />]}
         bucketChatMem={[<StructureDiv bucket1={[<ChatData/>]} />]}
         bucketFaceMem={[<StructureDiv bucket1={[<FaceData/>]} />]}
+        
+        firebase={firebase}
+        robotsList={robotsList}
       />
     </React.Fragment>
   ); 

@@ -11,12 +11,12 @@ export default function Index() {
         content={{
           brand: {
             text: 'CTRL Robotics',
-            image: '',
-            width: '80',
+            // image: './images/ctrl.svg',
+            width: '56',
           },
           'brand-small': {
             text: 'CTRL Robotics',
-            image: '',
+            // image: './images/ctrl.svg',
             width: '32',
           },
           link1: 'About Us',
@@ -25,10 +25,10 @@ export default function Index() {
           link4: 'Login',
         }}
       />
+      <Landing />
 
-      <Landing/>
+      <Footer />
 
-      <Footer/>
     </React.Fragment>
   );
 }

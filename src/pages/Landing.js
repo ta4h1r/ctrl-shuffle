@@ -24,14 +24,14 @@ function Landing() {
         }}
       />
 
-      <Portfolio2
+      {/* <Portfolio2
         content={{
           '02_header': 'Great companies we work with',
           '02_description':
             'We are constantly looking for new partners to migrate onto the CTRL Robotics platform. The future of the robotics is here!',
           'primary-action': 'View all partners',
         }}
-      />
+      /> */}
 
       <Team1
         content={{
