@@ -9,6 +9,7 @@ import IndexPage from './pages/Index.js';
 import FleetPage from './pages/FleetManager.js';
 import ProductsPage from './pages/Products.js';
 import ContactPage from './pages/Contact.js';
+import PageNotFound from './pages/PageNotFound';
 import LoginPage from './pages/Login.js';
 import SignupPage from './pages/Signup.js';
 
@@ -23,10 +24,12 @@ export default function App() {
             <FleetPage />
           </Route>
           <Route path="/landing/products">
-            <ProductsPage />
+            {/* <ProductsPage /> */}
+            <PageNotFound />
           </Route>
           <Route path="/landing/contact">
-            <ContactPage />
+            {/* <ContactPage /> */}
+            <PageNotFound />
           </Route>
           <Route path="/landing/login">
             <LoginPage />
