@@ -2,9 +2,6 @@ import React from 'react'
 
 import NotifyMe from './NotifyMe';
 
-const clientId = sessionStorage.getItem("clientId");
-const refPath = sessionStorage.getItem("REF_PATH");
-
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
@@ -15,8 +12,11 @@ function NotificationPanel(props) {
     const dataRef = React.useRef(data);
     dataRef.current = data;
 
-    const firebase = props.firebase;
     let robotsList = props.robotsList;
+    const firebase = props.firebase;
+
+
+    const refPath = sessionStorage.getItem("REF_PATH");
 
     React.useEffect(() => {
         setData(data);
@@ -49,13 +49,16 @@ function NotificationPanel(props) {
         console.log('data added', data);
     }
     const extractAndSendRelevantNotification = (obj) => {
-        console.log(obj, Date.now())
+        console.log(obj)
         if (obj.msgFrom.Web != null) {
             const accordionSummaryMsg = obj.msgFrom['Web'].accordionSummaryMsg;
             console.log(accordionSummaryMsg)
             switch (accordionSummaryMsg) {
                 case 'Stopped':
                     addNotification('now', `${capitalizeFirstLetter(obj.robot)} has stopped`) 
+                    break;
+                case 'Low power':
+                    addNotification('now', `${capitalizeFirstLetter(obj.robot)} needs to be charged`) 
                     break;
             }
         }
@@ -66,14 +69,14 @@ function NotificationPanel(props) {
     React.useEffect(() => {
 
         async function getFirebaseMessages() {
-            if (firebase.firestore) {
+            console.log(refPath, firebase.firestore)
+            var snapshotCounter = 0;
+            if (firebase.firestore && refPath) {
                 const db = firebase.firestore()
                 const robotsRef = db.collection(refPath);
                 const robotsSnapshot = await robotsRef.get();
 
-                let robotMsgs = [];
                 robotsSnapshot.forEach(async bot => {
-                    // const messagesRef = db.collection(refPath).doc(doc.id).collection('messages').doc('Web')
                     const messagesRef = db.collection(refPath).doc(bot.id).collection('messages');
                     const msgSnapshot = await messagesRef.get()
                     let obj = {};
@@ -81,17 +84,18 @@ function NotificationPanel(props) {
                     obj['robot'] = getBotAlias(bot.id);
                     obj['msgFrom'] = {};
 
+
                     msgSnapshot.forEach(async msgCategory => {
                         const category = msgCategory.id;
                         messagesRef.doc(category).onSnapshot(s => {
+                            snapshotCounter += 1;
                             obj.msgFrom[`${category}`] = s.data();
-                            extractAndSendRelevantNotification(obj);
+                            if(snapshotCounter > robotsList.length) {
+                                extractAndSendRelevantNotification(obj);
+                            }
                         });
                     })
-
-
                 })
-
 
             }
         }
@@ -105,9 +109,7 @@ function NotificationPanel(props) {
 
         getFirebaseMessages();
 
-
-
-    }, [robotsList])
+    }, [(refPath && firebase && robotsList)])
 
 
     return (
