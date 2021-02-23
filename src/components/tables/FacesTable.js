@@ -64,9 +64,13 @@ const useStyles = makeStyles(theme => ({
 
 }));
 
-
-const baseUrl = 'https://73svw35tt1.execute-api.us-east-1.amazonaws.com/prod';
-
+var baseUrl;
+const client = sessionStorage.getItem("clientName");
+if (client == 'Hotel Sky') {
+  baseUrl = 'https://73svw35tt1.execute-api.us-east-1.amazonaws.com/prod';
+} else {
+  baseUrl = 'https://moron-alert.com';
+}
 
 export default function StickyHeadTable({liftTableState}) {
   const classes = useStyles();

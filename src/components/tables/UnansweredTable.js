@@ -55,14 +55,15 @@ const useStyles = makeStyles(theme => ({
 
 }));
 
-
-
-
-
-
-
-const baseUrl = 'https://bgxan3yqs5.execute-api.us-east-1.amazonaws.com/prod';
-
+var baseUrl;
+const client = sessionStorage.getItem("clientName");
+if (client == 'Hotel Sky') {
+  baseUrl = 'https://bgxan3yqs5.execute-api.us-east-1.amazonaws.com/prod';
+} else if (client == 'ctrl') {
+  baseUrl = 'https://0tm95qi9ug.execute-api.us-east-1.amazonaws.com/prod';
+} else {
+  baseUrl = 'https://moron-alert.com';
+}
 
 export default function StickyHeadTable({liftTableState}) {
   const classes = useStyles();
