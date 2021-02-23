@@ -32,7 +32,7 @@ export default function Team(props) {
     '02_description': 'I am the absolute best programmer at Pied Piper (especially better than Gilfoyle).',
     '03_image': 'https://images.unsplash.com/photo-1598966739654-5e9a252d8c32?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&ah=256&q=80',
     '03_name': 'Bertram Gilfoyle',
-    '03_job': 'Chief Systems Architect',
+    '03_job': 'Chief Roboticist',
     '03_description': 'I work on Pied Piper only for the advanced technology! The Team need me to put out their fires, so I stay.', 
     ...props.content
   };
