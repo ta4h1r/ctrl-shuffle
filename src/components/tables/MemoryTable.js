@@ -64,17 +64,18 @@ const useStyles = makeStyles(theme => ({
 
 }));
 
-var baseUrl;
-const client = sessionStorage.getItem("clientName");
-if (client == 'Hotel Sky') {
-  baseUrl = 'https://n0kytdfoic.execute-api.us-east-1.amazonaws.com/prod';
-} else if (client == 'ctrl') {
-  baseUrl = 'https://1niy8hxoul.execute-api.us-east-1.amazonaws.com/prod';
-} else {
-  baseUrl = 'https://moron-alert.com';
-}
-
 export default function StickyHeadTable({ liftTableState }) {
+
+  var baseUrl;
+  const client = sessionStorage.getItem("clientName");
+  if (client == 'Hotel Sky') {
+    baseUrl = 'https://n0kytdfoic.execute-api.us-east-1.amazonaws.com/prod';
+  } else if (client == 'ctrl') {
+    baseUrl = 'https://1niy8hxoul.execute-api.us-east-1.amazonaws.com/prod';
+  } else {
+    baseUrl = 'https://moron-alert.com';
+  }
+
   const classes = useStyles();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -129,63 +130,63 @@ export default function StickyHeadTable({ liftTableState }) {
   }, [tableChanges]);
 
 
-    return (
+  return (
 
-      <Paper className={classes.root}>
+    <Paper className={classes.root}>
 
-        <TableContainer >
-          <Table stickyHeader aria-label="sticky table">
-            <TableHead>
-              <TableRow>
-                {columns.map((column) => (
-                  <TableCell
-                    key={`tc-${column.id}`}
-                    align={column.align}
-                    style={{ minWidth: column.minWidth }}
-                  >
-                    {column.label}
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
-                return (
-                  <TableRow key={`tr-${index}`} onClick={() => (handleRowClick(row))} hover role="checkbox" tabIndex={-1}>
-                    {columns.map((column) => {
-                      const value = row[column.id];
-                      return (
-                        <TableCell key={column.id} align={column.align} >
-                          {column.format && typeof value === 'number' ? column.format(value) : value}
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
+      <TableContainer >
+        <Table stickyHeader aria-label="sticky table">
+          <TableHead>
+            <TableRow>
+              {columns.map((column) => (
+                <TableCell
+                  key={`tc-${column.id}`}
+                  align={column.align}
+                  style={{ minWidth: column.minWidth }}
+                >
+                  {column.label}
+                </TableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
+              return (
+                <TableRow key={`tr-${index}`} onClick={() => (handleRowClick(row))} hover role="checkbox" tabIndex={-1}>
+                  {columns.map((column) => {
+                    const value = row[column.id];
+                    return (
+                      <TableCell key={column.id} align={column.align} >
+                        {column.format && typeof value === 'number' ? column.format(value) : value}
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
 
-          <div className={classes.rContainer}>
+        <div className={classes.rContainer}>
 
-            <TablePagination
-              rowsPerPageOptions={[10, 25, 100, 500, 1000]}
-              component="div"
-              count={rows.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onChangePage={handleChangePage}
-              onChangeRowsPerPage={handleChangeRowsPerPage}
-            />
+          <TablePagination
+            rowsPerPageOptions={[10, 25, 100, 500, 1000]}
+            component="div"
+            count={rows.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onChangePage={handleChangePage}
+            onChangeRowsPerPage={handleChangeRowsPerPage}
+          />
 
-          </div>
+        </div>
 
-        </TableContainer>
+      </TableContainer>
 
-        <QnaDialogue setTableData={setTableData} tableChanges={tableChanges} setTableChanges={setTableChanges} open={open} handleClose={handleClose} rowData={rowData} />
+      <QnaDialogue setTableData={setTableData} tableChanges={tableChanges} setTableChanges={setTableChanges} open={open} handleClose={handleClose} rowData={rowData} />
 
 
-      </Paper>
+    </Paper>
 
-    );
+  );
 }

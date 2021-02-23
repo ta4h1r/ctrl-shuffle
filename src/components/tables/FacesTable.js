@@ -64,15 +64,16 @@ const useStyles = makeStyles(theme => ({
 
 }));
 
-var baseUrl;
-const client = sessionStorage.getItem("clientName");
-if (client == 'Hotel Sky') {
-  baseUrl = 'https://73svw35tt1.execute-api.us-east-1.amazonaws.com/prod';
-} else {
-  baseUrl = 'https://moron-alert.com';
-}
+export default function StickyHeadTable({ liftTableState }) {
 
-export default function StickyHeadTable({liftTableState}) {
+  var baseUrl;
+  const client = sessionStorage.getItem("clientName");
+  if (client == 'Hotel Sky') {
+    baseUrl = 'https://73svw35tt1.execute-api.us-east-1.amazonaws.com/prod';
+  } else {
+    baseUrl = 'https://moron-alert.com';
+  }
+
   const classes = useStyles();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -115,7 +116,7 @@ export default function StickyHeadTable({liftTableState}) {
           setTableData(qnaData);
 
           liftTableState({
-            tableChanges: tableChanges, 
+            tableChanges: tableChanges,
             setTableChanges: setTableChanges,
           })
 
