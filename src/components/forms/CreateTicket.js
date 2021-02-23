@@ -41,8 +41,8 @@ class CreateTicket extends Component {
         this.state = {
             title: '',
             description: '',
-            projectName: 'Hotel Sky',
-            assignee: 'Taahir',
+            projectName: sessionStorage.getItem("clientName"),
+            assignee: sessionStorage.getItem('clientId'),
             priority: '',
             status: 'Open',
             email: '',

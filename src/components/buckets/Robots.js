@@ -76,6 +76,7 @@ function Robots(props) {
 
                     let fleetDetails = returnData.data.fleetDetails;
                     sessionStorage.setItem("REF_PATH", returnData.data.refPath);
+                    sessionStorage.setItem("clientName", returnData.data.clientName); 
 
                     let fetchedRobots = [];
                     if (fleetDetails) {
