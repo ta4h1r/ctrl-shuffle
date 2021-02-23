@@ -177,7 +177,7 @@ export default function StickyHeadTable({ liftTableState }) {
 
       </TableContainer>
 
-      <NewUnansweredDialog setTableData={setTableData} tableChanges={tableChanges} setTableChanges={setTableChanges} open={open} handleClose={handleClose} rowData={rowData} />
+      <NewUnansweredDialog setTableData={setTableData} tableChanges={tableChanges} setTableChanges={setTableChanges} open={open} handleClose={handleClose} rowData={rowData} baseUrl={baseUrl}/>
 
     </Paper>
 

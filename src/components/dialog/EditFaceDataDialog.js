@@ -22,7 +22,8 @@ export default function FormDialog({
   setTableChanges,
   open,
   handleClose,
-  rowData }) {
+  rowData,
+  baseUrl }) {
 
   const classes = useStyles()
 
@@ -41,6 +42,7 @@ export default function FormDialog({
             setTableChanges={setTableChanges}
             closeDialogFunction={handleClose}
             rowData={rowData}
+            baseUrl={baseUrl}
           />
 
         </DialogContent>

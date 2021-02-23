@@ -12,8 +12,6 @@ import QnaListField from '../list/QnaListField'
 import IntentListField from '../list/IntentListField'
 import DeleteAlertDialog from '../dialog/DeleteAlertDialog'
 
-const baseUrl = 'https://n0kytdfoic.execute-api.us-east-1.amazonaws.com/prod';
-
 const useStyles = (theme) => ({
     root: {
         marginTop: theme.spacing(2),
@@ -123,7 +121,7 @@ class FormFields extends Component {
 
         if (dataReady) {
             this.showAlert('updating');
-            axios.put(`${baseUrl}/${originalIntent}`, requestData)
+            axios.put(`${this.props.baseUrl}/${originalIntent}`, requestData)
                 .then(() => {
                     this.fetchData();
                     this.showAlert('updated');
@@ -139,7 +137,7 @@ class FormFields extends Component {
     }
 
     fetchData() {
-        fetch(baseUrl, {
+        fetch(this.props.baseUrl, {
             method: "get",
             headers: { "Content-Type": "application/json" },
             // body: JSON.stringify(postData),
@@ -235,7 +233,7 @@ class FormFields extends Component {
         ev.preventDefault();  //to stop the form submitting
         this.showAlert('updating');
         const originalIntent = this.props.rowData.intent;
-        axios.delete(`${baseUrl}/${originalIntent}`, null)
+        axios.delete(`${this.props.baseUrl}/${originalIntent}`, null)
             .then(() => {
                 this.fetchData()
                 this.showAlert('deleteSuccess');

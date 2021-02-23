@@ -12,8 +12,6 @@ import QnaListField from '../list/QnaListField'
 import IntentListField from '../list/IntentListField'
 import DeleteAlertDialog from '../dialog/DeleteAlertDialog'
 
-const baseUrl = 'https://n0kytdfoic.execute-api.us-east-1.amazonaws.com/prod';
-
 const useStyles = (theme) => ({
     root: {
         marginTop: theme.spacing(2),
@@ -27,7 +25,15 @@ const useStyles = (theme) => ({
     }
 });
 
-
+var baseUrl;
+const client = sessionStorage.getItem("clientName");
+if (client == 'Hotel Sky') {
+    baseUrl = 'https://n0kytdfoic.execute-api.us-east-1.amazonaws.com/prod';
+} else if (client == 'ctrl') {
+    baseUrl = 'https://1niy8hxoul.execute-api.us-east-1.amazonaws.com/prod';
+} else {
+    baseUrl = 'https://moron-alert.com';
+}
 
 class FormFields extends Component {
     constructor(props) {
@@ -284,7 +290,7 @@ class FormFields extends Component {
         this.setState({
             showDeleteSuccessAlert: false,
             showUpdatedAlert: false,
-            showUpdatingAlert: false, 
+            showUpdatingAlert: false,
             showFailedUpdateAlert: false,
         })
     }

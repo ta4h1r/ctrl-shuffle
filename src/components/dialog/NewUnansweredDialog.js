@@ -14,7 +14,8 @@ export default function FormDialog({
   setTableChanges,
   open,
   handleClose,
-  rowData 
+  rowData,
+  baseUrl 
  }) {
 
   return (
@@ -33,6 +34,7 @@ export default function FormDialog({
               setTableChanges={setTableChanges}
               closeDialogFunction={handleClose}
               rowData={rowData}
+              baseUrl={baseUrl}
             />
 
           </DialogContent>

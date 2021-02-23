@@ -184,8 +184,7 @@ export default function StickyHeadTable({ liftTableState }) {
 
       </TableContainer>
 
-      <EditFaceDialog setTableData={setTableData} tableChanges={tableChanges} setTableChanges={setTableChanges} open={open} handleClose={handleClose} rowData={rowData} />
-
+      <EditFaceDialog setTableData={setTableData} tableChanges={tableChanges} setTableChanges={setTableChanges} open={open} handleClose={handleClose} rowData={rowData} baseUrl={baseUrl}/>
 
     </Paper>
 

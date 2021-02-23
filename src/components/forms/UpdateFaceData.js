@@ -14,8 +14,6 @@ import FaceListField from '../list/FaceListField';
 import DeleteAlertDialog from '../dialog/DeleteAlertDialog'
 import FaceImage from '../__elements/ElementImageFaceRec';
 
-const baseUrl = 'https://73svw35tt1.execute-api.us-east-1.amazonaws.com/prod';
-
 const useStyles = (theme) => ({
     root: {
         marginTop: theme.spacing(2),
@@ -132,7 +130,7 @@ class FormFields extends Component {
         }
 
         this.showAlert('updating');
-        axios.post(`${baseUrl}`, requestData)
+        axios.post(`${this.props.baseUrl}`, requestData)
             .then(() => {
                 this.fetchData()
                 this.showAlert('deleteSuccess');
@@ -163,7 +161,7 @@ class FormFields extends Component {
 
         if (dataReady) {
             this.showAlert('updating');
-            axios.post(`${baseUrl}`, requestData)
+            axios.post(`${this.props.baseUrl}`, requestData)
                 .then(() => {
                     this.fetchData();
                     this.showAlert('updated');
@@ -179,7 +177,7 @@ class FormFields extends Component {
     }
 
     fetchData() {
-        fetch(baseUrl, {
+        fetch(this.props.baseUrl, {
             method: "get",
             headers: { "Content-Type": "application/json" },
             // body: JSON.stringify(postData),

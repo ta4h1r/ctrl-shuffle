@@ -183,8 +183,7 @@ export default function StickyHeadTable({ liftTableState }) {
 
       </TableContainer>
 
-      <QnaDialogue setTableData={setTableData} tableChanges={tableChanges} setTableChanges={setTableChanges} open={open} handleClose={handleClose} rowData={rowData} />
-
+      <QnaDialogue setTableData={setTableData} tableChanges={tableChanges} setTableChanges={setTableChanges} open={open} handleClose={handleClose} rowData={rowData} baseUrl={baseUrl}/>
 
     </Paper>
 
