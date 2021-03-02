@@ -4,6 +4,8 @@ import Switch from '../switches/Switch'
 import ChatGreetingListField from '../list/ChatGreetingListField'
 import { makeStyles } from '@material-ui/core';
 import { Button, Snackbar } from '@material-ui/core';
+import { Alert, AlertTitle } from '@material-ui/lab';
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -28,6 +30,9 @@ function Chat({ activity, botProps }) {
 
     const [greetingData, setGreetingData] = React.useState([]);
     const [g, setG] = React.useState('');
+    const [showUpdatingAlert, setShowUpdatingAlert] = React.useState(false);
+    const [showUpdatedAlert, setShowUpdatedAlert] = React.useState(false);
+    const [showFailedUpdateAlert, setShowFailedUpdateAlert] = React.useState(false);
 
     React.useEffect(() => {
 
@@ -66,15 +71,25 @@ function Chat({ activity, botProps }) {
     }
 
     const onUpdate = () => {
+        setShowUpdatingAlert(true);
         let data = {};
         for (var i = 0; i < greetingData.length; i++) {
             data[`greeting_${i}`] = greetingData[i]
         }
         refGreetingsDoc.set(data).then(() => {
-            console.log("Done")
+            setShowUpdatedAlert(true)
+        }).catch(err => {
+            console.log(err);
+            setShowFailedUpdateAlert(true)
         })
     }
 
+    const handleCloseSnackbar = () => {
+        setShowFailedUpdateAlert(false); 
+        setShowUpdatedAlert(false); 
+        setShowUpdatingAlert(false); 
+    }
+    
 
     const classes = useStyles();
 
@@ -101,6 +116,25 @@ function Chat({ activity, botProps }) {
 
             </div>
 
+
+            <Snackbar open={showUpdatingAlert} onClose={handleCloseSnackbar}>
+                    <Alert severity="info">
+                        <AlertTitle>Info</AlertTitle>
+                            Updating data...
+                    </Alert>
+                </Snackbar>
+                <Snackbar open={showUpdatedAlert} autoHideDuration={2000} onClose={handleCloseSnackbar}>
+                    <Alert severity="success">
+                        <AlertTitle>Success</AlertTitle>
+                            Successfully updated.
+                    </Alert>
+                </Snackbar>
+                <Snackbar open={showFailedUpdateAlert} autoHideDuration={2000} onClose={handleCloseSnackbar}>
+                    <Alert severity="error">
+                        <AlertTitle>Error</AlertTitle>
+                            Failed to update.
+                    </Alert>
+                </Snackbar>
 
 
         </div>
