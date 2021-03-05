@@ -101,11 +101,6 @@ function Chat({ activity, botProps }) {
     }
 
 
-
-
-
-
-
     const [tagsData, setTagsData] = React.useState([]);
     const [t, setT] = React.useState('');
 
@@ -117,8 +112,9 @@ function Chat({ activity, botProps }) {
             const doc = await refTagsDoc.get();
             if (!doc.exists) {
                 console.log('No such document!');
+                refTagsDoc.set({"activeTags": [], "toggle": 0})
             } else {
-                setTagsData(doc.data()["activeTags"]);
+                if (doc.data()["activeTags"]) setTagsData(doc.data()["activeTags"]);
             }
         }
 
@@ -156,9 +152,6 @@ function Chat({ activity, botProps }) {
             setShowFailedUpdateAlert(true)
         })
     }
-
-
-
 
 
     const classes = useStyles();

@@ -16,8 +16,6 @@ function mSwitch({ botProps }) {
         checkedA: checkedState,
     });
 
-    const [toggleState, setToggleState] = React.useState([])
-
     const db = botProps.firebase.firestore();
     const robotRef = db.collection(refPath).doc(deviceId);
     const navDocRef = robotRef.collection("chat").doc("navigate");
@@ -28,14 +26,15 @@ function mSwitch({ botProps }) {
 
             try {
 
-                const snapshot = await navDocRef.get();
-                const toggleValue = snapshot.data()["toggle"];
+                navDocRef.onSnapshot(snapshot => {
+                    const toggleValue = snapshot.data()["toggle"];
 
-                if (toggleValue == 1) {
-                    setState({ checkedA: true })
-                } else {
-                    setState({ checkedA: false })
-                }
+                    if (toggleValue == 1) {
+                        setState({ checkedA: true })
+                    } else {
+                        setState({ checkedA: false })
+                    }    
+                });
 
             } catch (err) {
                 console.error("getToggleValue: Value does not exist. ")

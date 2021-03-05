@@ -105,6 +105,7 @@ function mSwitch({ ability, botProps }) {
                     "activityValues": activityVals,
                 };
                 await robotRef.update(initialState);
+                robotRef.collection("chat").doc("navigate").update("toggle", 0).then().catch(err => console.error("Could not update chat toggle"));
             } catch(err) {
                 console.error(err);
             }
