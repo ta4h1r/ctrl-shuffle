@@ -2,23 +2,33 @@ import React from 'react'
 
 import Switch from '../switches/Switch'
 import ChatGreetingListField from '../list/ChatGreetingListField'
+import ActiveTagListField from '../list/ActiveTagListField'
+
+
 import { makeStyles } from '@material-ui/core';
 import { Button, Snackbar } from '@material-ui/core';
 import { Alert, AlertTitle } from '@material-ui/lab';
+
+import MapsFieldSelect from '../fields/MapsFieldSelect';
+import StartPointFieldSelect from '../fields/StartPointFieldSelect'
+import NavStatusIndicator from '../indicators/NavStatusIndicator';
 
 
 
 const useStyles = makeStyles((theme) => ({
     root: {
         marginTop: theme.spacing(2),
+        borderStyle: "solid", borderColor: "red", borderWidth: "0px"
     },
     button: {
         position: 'relative',
         display: 'flex',
-        float: 'right',
-        marginLeft: theme.spacing(1),
-        marginRight: 'auto',
-        marginBottom: theme.spacing(1),
+        float: 'centre',
+        marginLeft: theme.spacing(2),
+        // marginRight: theme.spacing(10),
+        // marginBottom: theme.spacing(20),
+        // borderStyle: "solid", borderColor: "red", borderWidth: "0px"
+
     }
 }));
 
@@ -79,26 +89,89 @@ function Chat({ activity, botProps }) {
         refGreetingsDoc.set(data).then(() => {
             setShowUpdatedAlert(true)
         }).catch(err => {
-            console.log(err);
+            // console.log(err);
             setShowFailedUpdateAlert(true)
         })
     }
 
     const handleCloseSnackbar = () => {
-        setShowFailedUpdateAlert(false); 
-        setShowUpdatedAlert(false); 
-        setShowUpdatingAlert(false); 
+        setShowFailedUpdateAlert(false);
+        setShowUpdatedAlert(false);
+        setShowUpdatingAlert(false);
     }
-    
+
+
+
+
+
+
+
+    const [tagsData, setTagsData] = React.useState([]);
+    const [t, setT] = React.useState('');
+
+    const refTagsDoc = db.collection(botProps.refPath).doc(botProps.robot.deviceId).collection("chat").doc("navigate");
+
+    React.useEffect(() => {
+
+        async function getTags() {
+            const doc = await refTagsDoc.get();
+            if (!doc.exists) {
+                console.log('No such document!');
+            } else {
+                setTagsData(doc.data()["activeTags"]);
+            }
+        }
+
+        getTags()
+
+    }, []);
+
+    const handleClickDeleteTagFromList = (listItem) => {
+        var newTagsData = tagsData.filter(q => q != listItem)
+        setTagsData(newTagsData);
+    }
+    const handleClickAddNewTagToList = () => {
+        if (t) {
+            const tagToAdd = t
+            var newTagData = [];
+            tagsData.forEach(item => {
+                newTagData.push(item);
+            })
+            newTagData.push(tagToAdd);
+
+            setTagsData(newTagData);
+            setT('');
+        }
+    }
+    const onChangeTagField = (e) => {
+        setT(e.target.value);
+    }
+    const onUpdateTagList = () => {
+        setShowUpdatingAlert(true);
+
+        refTagsDoc.update({ "activeTags": tagsData }).then(() => {
+            setShowUpdatedAlert(true)
+        }).catch(err => {
+            // console.error(err);
+            setShowFailedUpdateAlert(true)
+        })
+    }
+
+
+
+
 
     const classes = useStyles();
 
     return (
         <div className={classes.root} >
 
-            <Switch ability={activity} botProps={botProps} />
+
+            <Switch ability={activity} botProps={botProps}></Switch>
+
 
             <div className={classes.root}>
+
 
                 <ChatGreetingListField
                     category={'greeting'}
@@ -107,6 +180,7 @@ function Chat({ activity, botProps }) {
                     handleClickAddNew={handleClickAddNewGreetingToList}
                     onFieldChange={onChangeGreetingField}
                     fieldValue={g}
+                    botProps={botProps}
                 />
 
                 <Button className={classes.button} onClick={onUpdate} variant="outlined" color="primary">
@@ -117,24 +191,51 @@ function Chat({ activity, botProps }) {
             </div>
 
 
+            <div className={classes.root}>
+                <br />
+                <ActiveTagListField
+                    category={'active tag'}
+                    data={tagsData}
+                    handleClickDelete={handleClickDeleteTagFromList}
+                    handleClickAddNew={handleClickAddNewTagToList}
+                    onFieldChange={onChangeTagField}
+                    fieldValue={t}
+                    botProps={botProps}
+                />
+
+                <div className={classes.button}>
+                    <Button onClick={onUpdateTagList} variant="outlined" color="primary">
+                        Update
+                    </Button>
+                </div>
+            </div>
+
+            <div className={classes.root}>
+                <br />
+                {/* <NavStatusIndicator refPath={sessionStorage.getItem("REF_PATH")} deviceId={botProps.robot.deviceId} firebase={botProps.firebase} /> */}
+                <MapsFieldSelect botProps={botProps} />
+                <StartPointFieldSelect botProps={botProps} />
+                <br/>
+            </div>
+
             <Snackbar open={showUpdatingAlert} onClose={handleCloseSnackbar}>
-                    <Alert severity="info">
-                        <AlertTitle>Info</AlertTitle>
+                <Alert severity="info">
+                    <AlertTitle>Info</AlertTitle>
                             Updating data...
                     </Alert>
-                </Snackbar>
-                <Snackbar open={showUpdatedAlert} autoHideDuration={2000} onClose={handleCloseSnackbar}>
-                    <Alert severity="success">
-                        <AlertTitle>Success</AlertTitle>
+            </Snackbar>
+            <Snackbar open={showUpdatedAlert} autoHideDuration={2000} onClose={handleCloseSnackbar}>
+                <Alert severity="success">
+                    <AlertTitle>Success</AlertTitle>
                             Successfully updated.
                     </Alert>
-                </Snackbar>
-                <Snackbar open={showFailedUpdateAlert} autoHideDuration={2000} onClose={handleCloseSnackbar}>
-                    <Alert severity="error">
-                        <AlertTitle>Error</AlertTitle>
+            </Snackbar>
+            <Snackbar open={showFailedUpdateAlert} autoHideDuration={2000} onClose={handleCloseSnackbar}>
+                <Alert severity="error">
+                    <AlertTitle>Error</AlertTitle>
                             Failed to update.
                     </Alert>
-                </Snackbar>
+            </Snackbar>
 
 
         </div>

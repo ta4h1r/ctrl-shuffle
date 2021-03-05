@@ -127,7 +127,7 @@ function mSwitch({ ability, botProps }) {
         <span>
             <FormControlLabel
                 control={<Switch checked={state.checkedA} onChange={handleSwitch} name="checkedA" />}
-                label="On/Off"
+                label="Off/On"
             />
         </span>
     )
