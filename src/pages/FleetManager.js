@@ -7,6 +7,7 @@ import Robots from '../components/buckets/Robots'
 import Analysis from '../components/buckets/Analysis';
 import ChatData from '../components/buckets/ChatbotData';
 import FaceData from '../components/buckets/FaceData';
+import Logs from '../components/buckets/Logs';
 
 export default function Fleet(props) {
 
@@ -38,6 +39,7 @@ export default function Fleet(props) {
           link2: 'Analytics',
           link3: 'Chatbot Data',
           link4: 'Face Data',
+          link5: 'Logs',
           'secondary-action': 'Report Issue',
           'primary-action': 'Logout',
         }}
@@ -46,6 +48,7 @@ export default function Fleet(props) {
         bucketAnalytics={[<StructureDiv bucket1={[<Analysis/>]} />]}
         bucketChatMem={[<StructureDiv bucket1={[<ChatData/>]} />]}
         bucketFaceMem={[<StructureDiv bucket1={[<FaceData/>]} />]}
+        bucketLogs={[<StructureDiv bucket1={[<Logs/>]} />]}
         
         firebase={firebase}
         robotsList={robotsList}

@@ -18,6 +18,7 @@ import AppsIcon from '@material-ui/icons/Apps';
 import ChatIcon from '@material-ui/icons/Chat';
 import { Equalizer } from '@material-ui/icons';
 import PersonIcon from '@material-ui/icons/Person';
+import AndroidIcon from '@material-ui/icons/Android';
 
 import { useHistory } from "react-router-dom";
 
@@ -107,7 +108,8 @@ export default function Navigation(props) {
     'main': (Array.isArray(props.bucketMain) ? props.bucketMain : []),
     'analytics': (Array.isArray(props.bucketAnalytics) ? props.bucketAnalytics : []),
     'chatMem': (Array.isArray(props.bucketChatMem) ? props.bucketChatMem : []),
-    'faceMem': (Array.isArray(props.bucketFaceMem) ? props.bucketFaceMem : [])
+    'faceMem': (Array.isArray(props.bucketFaceMem) ? props.bucketFaceMem : []),
+    'logs': (Array.isArray(props.bucketLogs) ? props.bucketLogs : [])
   }
 
   const [bucketToLoad, setBucketToLoad] = React.useState('main')
@@ -128,6 +130,10 @@ export default function Navigation(props) {
     setBucketToLoad('faceMem');
   }
 
+  const handleClickLogs = () => {
+    setBucketToLoad('logs');
+  }
+
   const logout = () => {
     sessionStorage.clear();
     history.push('./login');
@@ -135,29 +141,40 @@ export default function Navigation(props) {
 
   const jsxList = [
     <List key={`list-item-${0}`}>
+
       <ListItem button onClick={handleClickRobots} key={content['link1']}>
         <ListItemIcon>
           <AppsIcon />
         </ListItemIcon>
         <ListItemText primary={content['link1']} />
       </ListItem>
+      
       <ListItem button onClick={handleClickAnalytics} key={content['link2']}>
         <ListItemIcon>
           <Equalizer />
         </ListItemIcon>
         <ListItemText primary={content['link2']} />
       </ListItem>
+
       <ListItem button onClick={handleClickChatMem} key={content['link3']}>
         <ListItemIcon>
           <ChatIcon />
         </ListItemIcon>
         <ListItemText primary={content['link3']} />
       </ListItem>
+
       <ListItem button onClick={handleClickFaceMem} key={content['link4']}>
         <ListItemIcon>
           <PersonIcon />
         </ListItemIcon>
         <ListItemText primary={content['link4']} />
+      </ListItem>
+
+      <ListItem button onClick={handleClickLogs} key={content['link5']}>
+        <ListItemIcon>
+          <AndroidIcon />
+        </ListItemIcon>
+        <ListItemText primary={content['link5']} />
       </ListItem>
     </List>
   ]
@@ -177,10 +194,10 @@ export default function Navigation(props) {
             {brandSmall}
           </Link>
 
-          <NotificationPanel firebase={props.firebase} robotsList={props.robotsList}/>
+          <NotificationPanel firebase={props.firebase} robotsList={props.robotsList} />
           <TicketForm className={classes.secondaryButton} classes={classes} />
           <Button onClick={logout} variant="contained" color="secondary">{content['primary-action']}</Button>
-        
+
         </Toolbar>
       </AppBar>
 
