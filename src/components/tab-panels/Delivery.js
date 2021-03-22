@@ -156,6 +156,13 @@ function Delivery({ activity, botProps }) {
     async function reqNavPath() {
         console.log(`Planning route to ${targetEndPoint}`);
 
+        const db = firebase.firestore();
+        const refLogDoc = db.collection(refPath).doc(deviceId).collection("logs").doc("Session");
+        refLogDoc.update({
+            "sessionHandle": "Start session",
+            "time": Date.now().toString()
+        });
+
         const postData = {
             command: "route",
             data: {
