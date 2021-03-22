@@ -3,6 +3,7 @@ import React from 'react';
 import HorizontalNav7 from '../components/navs/HorizontalNav7';
 import Footer from '../components/footers/Footer';
 import Landing from './Landing';
+import PageNotFound from './PageNotFound';
 
 export default function Index() {
   return (
@@ -25,7 +26,9 @@ export default function Index() {
           link4: 'Login',
         }}
       />
-      <Landing />
+      {/* <Landing /> */}
+
+      <PageNotFound/>
 
       <Footer />
 
