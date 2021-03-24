@@ -104,7 +104,7 @@ function Chat({ activity, botProps }) {
     const [tagsData, setTagsData] = React.useState([]);
     const [t, setT] = React.useState('');
 
-    const refTagsDoc = db.collection(botProps.refPath).doc(botProps.robot.deviceId).collection("chat").doc("navigate");
+    const refTagsDoc = db.collection(botProps.refPath).doc(botProps.robot.deviceId).collection("chat").doc("tags");
 
     React.useEffect(() => {
 
