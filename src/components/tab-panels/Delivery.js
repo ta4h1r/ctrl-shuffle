@@ -154,13 +154,16 @@ function Delivery({ activity, botProps }) {
 
     // Navigation
     async function reqNavPath() {
+        if (targetEndPoint.trim() == "") return; 
+
         console.log(`Planning route to ${targetEndPoint}`);
 
         const db = firebase.firestore();
         const refLogDoc = db.collection(refPath).doc(deviceId).collection("logs").doc("Session");
         refLogDoc.update({
             "sessionHandle": "Start session",
-            "time": Date.now().toString()
+            "time": Date.now().toString(),
+            "sessionId": Math.random().toString(36).substr(2, 9)
         });
 
         const postData = {
