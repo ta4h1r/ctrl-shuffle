@@ -12,6 +12,8 @@ import { useForm } from "react-hook-form";
 
 import SignInSubtitle from '../__elements/ElementSignInSubtitle';
 
+import { MixPanel } from '../MixPanel';
+
 const useStyles = makeStyles((theme) => ({
   tertiaryAction: {
     [theme.breakpoints.up('sm')]: {
@@ -69,13 +71,27 @@ export default function Form(props) {
 
       if (returnData.status == 200) {
         permission = "granted"
+        
+        MixPanel.identify(data.username);
+        MixPanel.track('Successful login');
+        MixPanel.people.set({
+          $first_name: data.username,
+          $client_id: data.clientId,
+        });
+
+        sessionStorage.setItem("username", data.username);
         sessionStorage.setItem("skyKey", permission);
         sessionStorage.setItem("clientId", returnData.data.clientId);
         sessionStorage.setItem("config", JSON.stringify(returnData.data.config));
         sessionStorage.setItem("aws_config", JSON.stringify(returnData.data.awsConfig));
         sessionStorage.setItem("iceServers", JSON.stringify(returnData.data.iceServers));
+        sessionStorage.setItem("API", JSON.stringify(returnData.data.api));
+        sessionStorage.setItem("metricsDB", returnData.data.metricsDB);
+        sessionStorage.setItem("s3Folder", returnData.data.s3Folder);
+
       } else {
         permission = "denied"
+        MixPanel.track('Unsuccessful login');
       }
 
       if (permission === "granted") {

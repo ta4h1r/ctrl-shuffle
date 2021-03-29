@@ -282,10 +282,11 @@ export default function ContainedButtons({ chartData, aggregateData, prevAggrega
         region: 'us-east-2'
       });
 
+      const s3Folder = sessionStorage.getItem("s3Folder")
       var s3 = new AWS.S3({ apiVersion: '2006-03-01' });
       var bucketParams = {
         Bucket: 'wordclouds3analytics',
-        Key: "wordCloud/" + sector + ".png",
+        Key: s3Folder + "/" + sector + ".png",
       };
 
       // Get Object from S3

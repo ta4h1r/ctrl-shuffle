@@ -58,13 +58,13 @@ const useStyles = makeStyles(theme => ({
 export default function StickyHeadTable({ liftTableState }) {
 
   var baseUrl;
-  const client = sessionStorage.getItem("clientName");
-  if (client == 'Hotel Sky') {
-    baseUrl = 'https://bgxan3yqs5.execute-api.us-east-1.amazonaws.com/prod';
-  } else if (client == 'ctrl') {
-    baseUrl = 'https://0tm95qi9ug.execute-api.us-east-1.amazonaws.com/prod';
-  } else {
-    baseUrl = 'https://moron-alert.com';
+  var apiList;
+  try {
+    apiList = JSON.parse(sessionStorage.getItem("API"));
+    baseUrl = apiList.unanswered_handler;
+  } catch(e) {
+    console.error(e);
+    baseUrl = "https://moron-alert.com"
   }
 
   const classes = useStyles();

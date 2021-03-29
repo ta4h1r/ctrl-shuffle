@@ -20,6 +20,8 @@ function Analysis() {
         AWS.config = new AWS.Config();
 
         const awsConfig = sessionStorage.getItem("aws_config");
+        const metricsDB = sessionStorage.getItem("metricsDB");
+        console.log(metricsDB);
         const aArray = JSON.parse(awsConfig);
         AWS.config.update(aArray[0]);
         AWS.config.update({
@@ -33,7 +35,7 @@ function Analysis() {
                 ':s': sector
             },
             KeyConditionExpression: 'sector = :s',
-            TableName: 'metricsDB'
+            TableName: metricsDB
         };
 
         return dynamoDB.query(params).promise();
@@ -51,7 +53,6 @@ function Analysis() {
             sectors.forEach(async (sector, index, array) => {
 
                 data = await dynamoQuery(sector);
-                // console.log(data.Items[0]);
                 try {
                     const aggregateObj = {
                         sector: sector,
@@ -106,7 +107,7 @@ function Analysis() {
         });
 
         await fn;         // Since there are async operations inside the forEach loop, we need to wait for the arrays to populate
-
+        
         setAggregateData(aggregateScores);
         setPrevAggregateData(prevAggregateScores);
         return populateChartData(runningScores);
@@ -210,7 +211,8 @@ function Analysis() {
             setChartData(data);
             setLoading(false);
         });
-        fetch("https://hbgvg306lj.execute-api.us-east-1.amazonaws.com/prod", {  // Update the wordclouds
+        const wc_api = JSON.parse(sessionStorage.getItem("API")).wordcloud;
+        fetch(wc_api, {  // Update the wordclouds
             method: "get",
             mode: "no-cors",
             headers: { "Content-Type": "application/json" },
