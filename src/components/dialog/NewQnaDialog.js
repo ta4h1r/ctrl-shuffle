@@ -27,7 +27,7 @@ export default function FormDialog({ dialogProps }) {
           <DialogTitle id="form-dialog-title">New data</DialogTitle>
           <DialogContent>
             <DialogContentText>
-              Enter the question, answer, and intent data below and then click submit.
+              Enter the question, answer, and intent (topic) data below and then click submit.
                 </DialogContentText>
 
             <NewQnaIntent

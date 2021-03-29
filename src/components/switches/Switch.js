@@ -2,9 +2,11 @@ import React from 'react'
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 
+import { MixPanel } from '../MixPanel';
+
 function mSwitch({ ability, botProps }) {
-    
-    const {activityValues, robot, firebase, refPath} = botProps;
+
+    const { activityValues, robot, firebase, refPath } = botProps;
     const deviceId = robot.deviceId;
 
     /** Decide the state of the switch */
@@ -15,7 +17,7 @@ function mSwitch({ ability, botProps }) {
     });
 
     React.useEffect(() => {
-        
+
         try {
 
             const objVals = Object.values(activityValues)
@@ -26,10 +28,10 @@ function mSwitch({ ability, botProps }) {
                 let value = objVals[i];
 
                 if (ability == activity && value == 1) {
-                    setState({checkedA: true})
+                    setState({ checkedA: true })
                     break;
                 } else {
-                    setState({checkedA: false})
+                    setState({ checkedA: false })
                 }
             }
         } catch (err) {
@@ -42,7 +44,7 @@ function mSwitch({ ability, botProps }) {
     /** What happens when the switch is pressed */
     const handleSwitch = (event) => {
         const switchOn = !event.target.checked;
-        if(switchOn) {
+        if (switchOn) {
             endActivity(refPath, deviceId)
         } else {
             startActivity(refPath, deviceId)
@@ -52,6 +54,7 @@ function mSwitch({ ability, botProps }) {
     async function startActivity(refPath, deviceId) {
 
         sendMessage("accordionSummaryMsg", "Loading...");
+        MixPanel.track('Start activity: ' + ability);
 
         try {
             if (refPath != null && deviceId != null) {
@@ -59,9 +62,9 @@ function mSwitch({ ability, botProps }) {
                 const robotRef = db.collection(refPath).doc(deviceId);
                 var robotState = await robotRef.get();
                 var activityVals = robotState.data().activityValues;
-    
+
                 // Finish all other activities
-                for(const property in activityVals) {
+                for (const property in activityVals) {
                     if (property != ability) {
                         activityVals[property] = 0;
                     }
@@ -70,7 +73,7 @@ function mSwitch({ ability, botProps }) {
                     "activityValues": activityVals,
                 };
                 await robotRef.update(initialState);
-                
+
                 if (activityVals[ability] == 0) {
                     activityVals[ability] = 1;
                     var state = {
@@ -91,14 +94,15 @@ function mSwitch({ ability, botProps }) {
     async function endActivity(refPath, deviceId) {
 
         sendMessage("accordionSummaryMsg", "-");
+        MixPanel.track('End activity: ' + ability);
 
-        if(refPath != null && deviceId != null) {
+        if (refPath != null && deviceId != null) {
             const db = firebase.firestore();
             const robotRef = db.collection(refPath).doc(deviceId);
             var robotState = await robotRef.get();
             try {
                 var activityVals = robotState.data().activityValues;
-                for(const property in activityVals) {
+                for (const property in activityVals) {
                     activityVals[property] = 0;
                 }
                 var initialState = {
@@ -106,17 +110,17 @@ function mSwitch({ ability, botProps }) {
                 };
                 await robotRef.update(initialState);
                 robotRef.collection("chat").doc("navigate").update("toggle", 0).then().catch(err => console.error("Could not update chat toggle"));
-            } catch(err) {
+            } catch (err) {
                 console.error(err);
             }
-            
+
         } else {
             console.log("endActivity: The requested robot could not be found.")
         }
-    
+
     }
     function sendMessage(field, msg) {
-        const refPath = sessionStorage.getItem('REF_PATH'); 
+        const refPath = sessionStorage.getItem('REF_PATH');
         const db = firebase.firestore();
         const robotRef = db.collection(refPath).doc(robot.deviceId);
         var obj = {};
