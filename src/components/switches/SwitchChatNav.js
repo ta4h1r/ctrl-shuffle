@@ -27,13 +27,14 @@ function mSwitch({ botProps }) {
             try {
 
                 navDocRef.onSnapshot(snapshot => {
-                    const toggleValue = snapshot.data()["toggle"];
-
-                    if (toggleValue == 1) {
-                        setState({ checkedA: true })
-                    } else {
-                        setState({ checkedA: false })
-                    }    
+                    if (snapshot.data()) {
+                        const toggleValue = snapshot.data()["toggle"];
+                        if (toggleValue == 1) {
+                            setState({ checkedA: true })
+                        } else {
+                            setState({ checkedA: false })
+                        }
+                    }
                 });
 
             } catch (err) {
@@ -50,10 +51,10 @@ function mSwitch({ botProps }) {
     const handleSwitch = (event) => {
         const switchOn = !event.target.checked;
         if (switchOn) {
-            navDocRef.update({"toggle": 0})
+            navDocRef.set({ "toggle": 0 })
             setState({ checkedA: false })
         } else {
-            navDocRef.update({"toggle": 1})
+            navDocRef.set({ "toggle": 1 })
             setState({ checkedA: true })
         }
     };

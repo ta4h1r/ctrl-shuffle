@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 
 
-function ActiveAbilityIndicator({refPath, robot, firebase}) {
+function ActiveAbilityIndicator({ refPath, robot, firebase }) {
 
     const db = firebase.firestore();
     const refDoc = db.collection(refPath).doc(robot.deviceId);
@@ -11,18 +11,23 @@ function ActiveAbilityIndicator({refPath, robot, firebase}) {
     const [activeAbility, setActiveAbility] = useState([]);
 
     useEffect(() => {
-       
+
         refDoc.onSnapshot(snapshot => {
-            const keys = Object.keys(snapshot.get('activityValues'));
-            const vals = Object.values(snapshot.get('activityValues'));
-            for(var i=0;i<keys.length;i++) {
-                if(vals[i] === 1) {
-                    setActiveAbility(capitalizeFirstLetter(keys[i]));
-                    break;
+
+            if (snapshot.data()) {
+                const keys = Object.keys(snapshot.get('activityValues'));
+                const vals = Object.values(snapshot.get('activityValues'));
+                for (var i = 0; i < keys.length; i++) {
+                    if (vals[i] === 1) {
+                        setActiveAbility(capitalizeFirstLetter(keys[i]));
+                        break;
+                    }
+                    setActiveAbility("-");
                 }
-                setActiveAbility("-");
             }
-            
+
+
+
         });
     }, []);
 

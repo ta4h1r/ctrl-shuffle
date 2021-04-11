@@ -86,8 +86,8 @@ export default function Form(props) {
         sessionStorage.setItem("aws_config", JSON.stringify(returnData.data.awsConfig));
         sessionStorage.setItem("iceServers", JSON.stringify(returnData.data.iceServers));
         sessionStorage.setItem("API", JSON.stringify(returnData.data.api));
-        sessionStorage.setItem("metricsDB", returnData.data.metricsDB);
-        sessionStorage.setItem("s3Folder", returnData.data.s3Folder);
+        sessionStorage.setItem("metricsDB", returnData.data.dbNames.metricsDb);
+        sessionStorage.setItem("itemNames", JSON.stringify(returnData.data.itemNames));
 
       } else {
         permission = "denied"
