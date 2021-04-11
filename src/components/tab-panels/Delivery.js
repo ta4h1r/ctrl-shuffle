@@ -151,11 +151,15 @@ function Delivery({ activity, botProps }) {
         setState({ ...state, [event.target.name]: event.target.checked });
     };
 
-
+    const availableRooms = JSON.parse(sessionStorage.getItem("itemNames")).availableRooms;
+    
     // Navigation
     async function reqNavPath() {
         if (targetEndPoint.trim() == "") return; 
-
+        if (!availableRooms.includes(targetEndPoint.trim())) {
+            alert("Room not available")
+            return; 
+        }
         console.log(`Planning route to ${targetEndPoint}`);
 
         const db = firebase.firestore();
@@ -176,7 +180,9 @@ function Delivery({ activity, botProps }) {
             }
         }
 
-        fetch("https://3i0al4myn6.execute-api.us-east-1.amazonaws.com/prod", {
+        const navPlanner = JSON.parse(sessionStorage.getItem("API")).nav_planner; 
+
+        fetch(navPlanner, {
             method: "post",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(postData),
@@ -289,15 +295,15 @@ function Delivery({ activity, botProps }) {
 
                     <TextField
                         style={{ marginBottom: 10 }}
-                        // select ={''}
+                        // select
                         label="End point"
-                        value={targetEndPoint}
+                        value={(targetEndPoint.length > 0) ? targetEndPoint : ''}
                         onChange={handleChangeEnd}
                         variant="outlined"
                     >
-                        {tags.map((option) => (
-                            <MenuItem key={option.value} value={option.value}>
-                                {option.label}
+                        {availableRooms.map((option) => (
+                            <MenuItem key={option} value={option}>
+                                {option}
                             </MenuItem>
                         ))}
                     </TextField>
