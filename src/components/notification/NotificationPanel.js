@@ -15,50 +15,32 @@ function NotificationPanel(props) {
     let robotsList = props.robotsList;
     const firebase = props.firebase;
 
-
     const refPath = sessionStorage.getItem("REF_PATH");
 
-    React.useEffect(() => {
-        setData(data);
-        console.log('On data Change', data);
-    }, [data]);
-
-
-
-    const addNotification = (when, message) => {
+    const addNotification = (msg, timestamp) => {
         console.log('Add Notification');
         let obj = {};
-        obj['update'] = message;
+        obj['update'] = msg;
+        obj['timestamp'] =  1000 * timestamp;
 
-        if (when === 'now') {
-            obj['timestamp'] = new Date().getTime();
-        } if (when === 'minute') {
-            obj['timestamp'] = new Date().getTime() - (61 * 1000);
-        } if (when === 'hour') {
-            obj['timestamp'] = new Date().getTime() - (61 * 60 * 1000);;
-        } else if (when === 'yesterday') {
-            obj['timestamp'] = new Date().getTime() - (25 * 60 * 60 * 1000);
-        }
-        else if (when === 'month') {
-            obj['timestamp'] = new Date().getTime() - (31 * 24 * 60 * 60 * 1000);
-        }
-        else if (when === 'year') {
-            obj['timestamp'] = new Date().getTime() - (13 * 30 * 24 * 60 * 60 * 1000);
-        }
         setData(() => ([...dataRef.current, obj]));
         console.log('data added', data);
-    }
+      }
     const extractAndSendRelevantNotification = (obj) => {
-        console.log(obj)
+        const timestamp = obj.msgFrom.Web.time;
+        msgRef.current = timestamp;
         if (obj.msgFrom.Web != null) {
             const accordionSummaryMsg = obj.msgFrom['Web'].accordionSummaryMsg;
-            console.log(accordionSummaryMsg)
+            console.log(accordionSummaryMsg);
             switch (accordionSummaryMsg) {
                 case 'Stopped':
-                    addNotification('now', `${capitalizeFirstLetter(obj.robot)} has stopped`) 
+                    addNotification(`${capitalizeFirstLetter(obj.robot)} has stopped`, timestamp)
                     break;
                 case 'Low power':
-                    addNotification('now', `${capitalizeFirstLetter(obj.robot)} needs to be charged`) 
+                    addNotification(`${capitalizeFirstLetter(obj.robot)}'s battery is low`, timestamp)
+                    break;
+                case 'Waiting...':
+                    addNotification(`${capitalizeFirstLetter(obj.robot)} is waiting for pick up`, timestamp)
                     break;
             }
         }
@@ -66,35 +48,33 @@ function NotificationPanel(props) {
 
     }
 
+    const [msgObj, setMsgObj] = React.useState([])
     React.useEffect(() => {
 
         async function getFirebaseMessages() {
-            console.log(refPath, firebase.firestore)
-            var snapshotCounter = 0;
-            if (firebase.firestore && refPath) {
+            if (firebase.firestore && refPath && robotsList) {
+
                 const db = firebase.firestore()
                 const robotsRef = db.collection(refPath);
                 const robotsSnapshot = await robotsRef.get();
 
+                let snapshotCounter = 0;
+
                 robotsSnapshot.forEach(async bot => {
-                    const messagesRef = db.collection(refPath).doc(bot.id).collection('messages');
-                    const msgSnapshot = await messagesRef.get()
+                    const messagesRef = db.collection(refPath).doc(bot.id).collection('messages').doc("Web");
+                    const msgSnapshot = await messagesRef.get();
+
                     let obj = {};
 
                     obj['robot'] = getBotAlias(bot.id);
                     obj['msgFrom'] = {};
 
+                    messagesRef.onSnapshot(async s => {
+                        obj.msgFrom[`${s.id}`] = s.data();
+                        console.log("snapshot:", obj);
+                        setMsgObj(obj);
+                    });
 
-                    msgSnapshot.forEach(async msgCategory => {
-                        const category = msgCategory.id;
-                        messagesRef.doc(category).onSnapshot(s => {
-                            snapshotCounter += 1;
-                            obj.msgFrom[`${category}`] = s.data();
-                            if(snapshotCounter > robotsList.length) {
-                                extractAndSendRelevantNotification(obj);
-                            }
-                        });
-                    })
                 })
 
             }
@@ -109,7 +89,21 @@ function NotificationPanel(props) {
 
         getFirebaseMessages();
 
-    }, [(refPath && firebase && robotsList)])
+    }, [(refPath && robotsList)])
+
+
+    const [webMessages, setWebMessages] = React.useState([]);
+    const msgRef = React.useRef();
+
+    React.useEffect(() => {
+        const msgCategories = Object.values(msgObj)[1];
+        console.log("msgCategories:", msgCategories)
+        if (msgCategories) {
+            if (msgRef.current !== msgCategories.Web.time) {
+                extractAndSendRelevantNotification(msgObj)
+            };
+        }
+    }, [msgObj]);
 
 
     return (
@@ -120,9 +114,9 @@ function NotificationPanel(props) {
                 notific_value='update'
                 heading='Notification Alerts'
                 sortedByKey={false}
-                showDate={true}
-                size={32}
-                color="green"
+                showDate={false}
+                size={28}
+                color="white"
             />
         </div>
     )

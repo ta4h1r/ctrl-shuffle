@@ -1,3 +1,4 @@
+// https://github.com/atapas/notifyme
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from "prop-types";
 
@@ -85,21 +86,21 @@ const NotifyMe = props => {
                         diff = a.diff(b, 'minute');
                         if (diff === 0) {
                             diff = a.diff(b, 'second');
-                            return `${diff} second(s) before`;
+                            return `${diff} second(s) ago`;
                         } else {
-                            return `${diff} minute(s) before`;
+                            return `${diff} minute(s) ago`;
                         }
                     } else {
-                        return `${diff} hour(s) before`;
+                        return `${diff} hour(s) ago`;
                     }
                 } else {
-                    return `${diff} days(s) before`;
+                    return `${diff} days(s) ago`;
                 }
             } else {
-                return `${diff} month(s) before`;
+                return `${diff} month(s) ago`;
             }
         } else {
-            return `${diff} year(s) before`;
+            return `${diff} year(s) ago`;
         }
     };
 
@@ -181,7 +182,7 @@ const NotifyMe = props => {
                                                 className={index < readIndex ? 'notification-message unread' : 'notification-message'}
                                                 key={index}>
                                                 <div className="timestamp">
-                                                    <span>{getDayDiff(message[key])}</span>
+                                                    <span>{getDayDiff(parseInt(message[key]))}</span>
                                                     {showDate && <span>{' ('}{getWhen(message[key])}{')'}</span>}
                                                 </div>
                                                 <div className="content" dangerouslySetInnerHTML={getContent(message[notificationMsg])} />
