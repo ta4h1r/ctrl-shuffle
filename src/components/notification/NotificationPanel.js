@@ -18,20 +18,17 @@ function NotificationPanel(props) {
     const refPath = sessionStorage.getItem("REF_PATH");
 
     const addNotification = (msg, timestamp) => {
-        console.log('Add Notification');
         let obj = {};
         obj['update'] = msg;
         obj['timestamp'] =  1000 * timestamp;
 
         setData(() => ([...dataRef.current, obj]));
-        console.log('data added', data);
       }
     const extractAndSendRelevantNotification = (obj) => {
         const timestamp = obj.msgFrom.Web.time;
         msgRef.current = timestamp;
         if (obj.msgFrom.Web != null) {
             const accordionSummaryMsg = obj.msgFrom['Web'].accordionSummaryMsg;
-            console.log(accordionSummaryMsg);
             switch (accordionSummaryMsg) {
                 case 'Stopped':
                     addNotification(`${capitalizeFirstLetter(obj.robot)} has stopped`, timestamp)
@@ -71,7 +68,6 @@ function NotificationPanel(props) {
 
                     messagesRef.onSnapshot(async s => {
                         obj.msgFrom[`${s.id}`] = s.data();
-                        console.log("snapshot:", obj);
                         setMsgObj(obj);
                     });
 
@@ -97,7 +93,6 @@ function NotificationPanel(props) {
 
     React.useEffect(() => {
         const msgCategories = Object.values(msgObj)[1];
-        console.log("msgCategories:", msgCategories)
         if (msgCategories) {
             if (msgRef.current !== msgCategories.Web.time) {
                 extractAndSendRelevantNotification(msgObj)
