@@ -87,8 +87,6 @@ function NotificationPanel(props) {
 
     }, [(refPath && robotsList)])
 
-
-    const [webMessages, setWebMessages] = React.useState([]);
     const msgRef = React.useRef();
 
     React.useEffect(() => {
