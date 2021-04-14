@@ -148,7 +148,7 @@ export default function Navigation(props) {
         </ListItemIcon>
         <ListItemText primary={content['link1']} />
       </ListItem>
-      
+
       <ListItem button onClick={handleClickAnalytics} key={content['link2']}>
         <ListItemIcon>
           <Equalizer />
@@ -163,19 +163,20 @@ export default function Navigation(props) {
         <ListItemText primary={content['link3']} />
       </ListItem>
 
-      <ListItem button onClick={handleClickFaceMem} key={content['link4']}>
+      {/* <ListItem button onClick={handleClickFaceMem} key={content['link4']}>
         <ListItemIcon>
           <PersonIcon />
         </ListItemIcon>
         <ListItemText primary={content['link4']} />
-      </ListItem>
+      </ListItem> */}
 
-      <ListItem button onClick={handleClickLogs} key={content['link5']}>
+      {/* <ListItem button onClick={handleClickLogs} key={content['link5']}>
         <ListItemIcon>
           <AndroidIcon />
         </ListItemIcon>
         <ListItemText primary={content['link5']} />
-      </ListItem>
+      </ListItem> */}
+
     </List>
   ]
 

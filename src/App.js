@@ -18,7 +18,8 @@ export default function App() {
     <Router>
         <Switch>
           <Route exact path="/landing">
-            <IndexPage />
+            {/* <IndexPage /> */}
+            <LoginPage />
           </Route>
           <Route path="/landing/fleet">
             <FleetPage />
