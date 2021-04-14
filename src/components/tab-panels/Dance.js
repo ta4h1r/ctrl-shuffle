@@ -49,7 +49,8 @@ function Dance({ activity, botProps }) {
     const classes = useStyles();
 
     const db = firebase.firestore();
-    const refStartSync = db.collection("Sync").doc("PresentationActivity");
+    const syncDoc = JSON.parse(sessionStorage.getItem("itemNames")).sync;
+    const refStartSync = db.collection(syncDoc).doc("PresentationActivity");
 
     const [buttonDisabled, setButtonDisabled] = useState(false);
 
@@ -206,9 +207,9 @@ function Dance({ activity, botProps }) {
             <Switch ability={activity} botProps={botProps} />
 
             <div className={classes.root}>
-                <Button variant="contained" onClick={() => startSequenceSync(1)} disabled={buttonDisabled} size="small">Sync 1</Button>
-                <Button variant="contained" onClick={() => startSequenceSync(2)} disabled={buttonDisabled} size="small">Sync 2</Button>
-                <Button variant="contained" onClick={() => startSequenceSync(3)} disabled={buttonDisabled} size="small">Sync 3</Button>
+                <Button variant="contained" onClick={() => startSequenceSync(1)} disabled={buttonDisabled} size="small">Jerusalema</Button>
+                {/* <Button variant="contained" onClick={() => startSequenceSync(2)} disabled={buttonDisabled} size="small">Sync 2</Button> */}
+                {/* <Button variant="contained" onClick={() => startSequenceSync(3)} disabled={buttonDisabled} size="small">Sync 3</Button> */}
                 <Button variant="contained" onClick={() => startSequenceSync("stop")} disabled={buttonDisabled} size="small">Stop</Button>
             </div>
 
