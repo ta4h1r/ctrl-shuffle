@@ -1,3 +1,5 @@
+import { CompassCalibrationOutlined } from '@material-ui/icons';
+import { init } from 'mixpanel-browser';
 import React from 'react'
 
 import NotifyMe from './NotifyMe';
@@ -12,6 +14,8 @@ function NotificationPanel(props) {
     const dataRef = React.useRef(data);
     dataRef.current = data;
 
+    const timeStampRef = React.useRef({});
+
     let robotsList = props.robotsList;
     const firebase = props.firebase;
 
@@ -20,13 +24,12 @@ function NotificationPanel(props) {
     const addNotification = (msg, timestamp) => {
         let obj = {};
         obj['update'] = msg;
-        obj['timestamp'] =  1000 * timestamp;
+        obj['timestamp'] = 1000 * timestamp;
 
         setData(() => ([...dataRef.current, obj]));
-      }
+    }
     const extractAndSendRelevantNotification = (obj) => {
         const timestamp = obj.msgFrom.Web.time;
-        msgRef.current = timestamp;
         if (obj.msgFrom.Web != null) {
             const accordionSummaryMsg = obj.msgFrom['Web'].accordionSummaryMsg;
             switch (accordionSummaryMsg) {
@@ -41,8 +44,6 @@ function NotificationPanel(props) {
                     break;
             }
         }
-
-
     }
 
     const [msgObj, setMsgObj] = React.useState([])
@@ -87,14 +88,18 @@ function NotificationPanel(props) {
 
     }, [(refPath && robotsList)])
 
-    const msgRef = React.useRef();
 
     React.useEffect(() => {
         const msgCategories = Object.values(msgObj)[1];
+        const msgRobotAlias = Object.values(msgObj)[0];
+        
         if (msgCategories) {
-            if (msgRef.current !== msgCategories.Web.time) {
+            const robot = msgRobotAlias;
+            const timestamp = msgCategories.Web.time;
+            if (timeStampRef.current[robot] !== timestamp) {
+                timeStampRef.current[robot] = timestamp;
                 extractAndSendRelevantNotification(msgObj)
-            };
+            }
         }
     }, [msgObj]);
 
