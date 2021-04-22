@@ -142,7 +142,7 @@ function Analysis() {
                 var connectivity = {};
 
                 const currTime = Math.floor(new Date().getTime() / 1000);
-                const diff = 365 * 24 * 3600;                            // x days * 24 h * 3600 s
+                const diff = 30 * 24 * 3600;                            // x days * 24 h * 3600 s
 
                 switch (score.sector) {   // Indicate the score that has been updated
                     case "Service":

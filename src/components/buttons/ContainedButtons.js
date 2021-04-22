@@ -379,7 +379,7 @@ export default function ContainedButtons({ chartData, aggregateData, prevAggrega
               </Typography>
               <div>
                 <Typography variant="body1" color="inherit" component="h2">
-                  {aggregateChange.facilities}%
+                  {aggregateChangeSign.cleanliness + " " + aggregateChange.facilities}%
     </Typography>
               </div>
             </div>
@@ -429,7 +429,7 @@ export default function ContainedButtons({ chartData, aggregateData, prevAggrega
       <div className={classes.chart}>
 
         <ResponsiveContainer width="90%"
-            height={400}>
+          height={400}>
 
           <LineChart
             style={{
@@ -437,7 +437,7 @@ export default function ContainedButtons({ chartData, aggregateData, prevAggrega
               marginRight: "auto",
               borderRadius: ".4em"
             }}
-            
+
             data={sectorData}
             margin={{
               top: 5, right: 30, left: 20, bottom: 5,
@@ -451,8 +451,73 @@ export default function ContainedButtons({ chartData, aggregateData, prevAggrega
             {/* <YAxis />*/}
             <Tooltip />
             <Legend />
-            <Line type="monotone" dataKey="Positive" stroke="#1BC5BD" strokeWidth="4" activeDot={{ r: 8 }} />
+            <Line type="monotone" dataKey="Positive" stroke="#1BC5BD" strokeWidth="4" />
+           
+          </LineChart>
+
+        </ResponsiveContainer>
+
+      </div>
+
+
+      <div className={classes.chart}>
+
+        <ResponsiveContainer width="90%"
+          height={400}>
+
+          <LineChart
+            style={{
+              marginLeft: "auto",
+              marginRight: "auto",
+              borderRadius: ".4em"
+            }}
+
+            data={sectorData}
+            margin={{
+              top: 5, right: 30, left: 20, bottom: 5,
+            }}
+          >
+            <CartesianGrid strokeDasharray="6 3" stroke="false" />
+
+            <XAxis name='date' allowDuplicatedCategory={true} dataKey="time" />
+            <YAxis />
+
+            {/* <YAxis />*/}
+            <Tooltip />
+            <Legend />
             <Line type="monotone" dataKey="Negative" stroke="#F64E60" strokeWidth="4" />
+          </LineChart>
+
+        </ResponsiveContainer>
+
+      </div>
+
+
+      <div className={classes.chart}>
+
+        <ResponsiveContainer width="90%"
+          height={400}>
+
+          <LineChart
+            style={{
+              marginLeft: "auto",
+              marginRight: "auto",
+              borderRadius: ".4em"
+            }}
+
+            data={sectorData}
+            margin={{
+              top: 5, right: 30, left: 20, bottom: 5,
+            }}
+          >
+            <CartesianGrid strokeDasharray="6 3" stroke="false" />
+
+            <XAxis name='date' allowDuplicatedCategory={true} dataKey="time" />
+            <YAxis />
+
+            {/* <YAxis />*/}
+            <Tooltip />
+            <Legend />
             <Line type="monotone" dataKey="Neutral" stroke="#8950FC" strokeWidth="4" />
           </LineChart>
 
