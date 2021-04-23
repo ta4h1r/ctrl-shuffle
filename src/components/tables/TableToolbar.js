@@ -19,6 +19,13 @@ const useToolbarStyles = makeStyles(theme => ({
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(1),
   },
+  filter: {
+    paddingTop: theme.spacing(2),
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(1),
+    marginRight: theme.spacing(1),
+    float: 'right',
+  },
   highlight:
     theme.palette.type === 'light'
       ? {
@@ -39,47 +46,58 @@ const TableToolbar = props => {
   const {
     numSelected,
     addUserHandler,
-    deleteUserHandler,
+    deleteUserHandler: deleteHandler,
     preGlobalFilteredRows,
     setGlobalFilter,
     globalFilter
   } = props
 
   return (
-    <Toolbar
-      className={clsx(classes.root, {
-        [classes.highlight]: numSelected > 0,
-      })}
-    >
-      {/* <AddUserDialog addUserHandler={addUserHandler} /> */}
-      {numSelected > 0 ? (
-        <Typography
-          className={classes.title}
-          color="inherit"
-          variant="subtitle1"
-        >
-          {numSelected} selected
-        </Typography>
-      ) : (
-        <Typography className={classes.title} variant="h6" id="tableTitle">
-          {/* Answer */}
-        </Typography>
-      )}
+    <>
+      <Toolbar
+        className={clsx(classes.root, {
+          [classes.highlight]: numSelected > 0,
+        })}
+      >
+        {/* <AddUserDialog addUserHandler={addUserHandler} /> */}
+        {numSelected > 0 ? (
+          <Typography
+            className={classes.title}
+            color="inherit"
+            variant="subtitle1"
+          >
+            {numSelected} selected
+          </Typography>
+        ) : (
+          <Typography className={classes.title} variant="h6" id="tableTitle">
+            {/* Answer */}
+          </Typography>
+        )}
 
-      {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton aria-label="delete" onClick={deleteUserHandler}>
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
-      ) : (
+        {numSelected > 0 ? (
+          <>
+            <Tooltip title="Delete">
+              <IconButton aria-label="delete" onClick={deleteHandler}>
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
+          </>
+        ) : (
+          null
+        )}
+
+      </Toolbar>
+
+      <div className={classes.filter}>
         <GlobalFilter
           preGlobalFilteredRows={preGlobalFilteredRows}
           globalFilter={globalFilter}
           setGlobalFilter={setGlobalFilter}
         />
-      )}
-    </Toolbar>
+
+      </div>
+
+    </>
   )
 }
 

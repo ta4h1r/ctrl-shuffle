@@ -13,7 +13,17 @@ import TablePaginationActions from './TablePaginationActions'
 import TableRow from '@material-ui/core/TableRow'
 import TableSortLabel from '@material-ui/core/TableSortLabel'
 import Paper from '@material-ui/core/Paper';
-import TableToolbar from './TableToolbar'
+import TableToolbar from './TableToolbar';
+
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
+import CheckIcon from '@material-ui/icons/Check';
+
+import { IconButton, TextField } from '@material-ui/core';
+import NewUnansweredDialog from '../dialog/NewUnansweredDialog';
+
+
+
 import {
   useGlobalFilter,
   usePagination,
@@ -43,6 +53,7 @@ const useStyles = makeStyles(theme => ({
       display: 'flex',
       flexGrow: 1,
       flexWrap: 'wrap',
+      // topPadding: theme.spacing(2),
       // borderWidth: '1px', borderStyle: 'solid', borderColor: 'white',
     },
     '& .MuiTableContainer-root': {
@@ -83,7 +94,7 @@ const EnhancedTable = ({
 
   liftTableState,
   dialogProps,
-  handleRowClick,
+  // handleRowClick,
 }) => {
 
 
@@ -110,8 +121,24 @@ const EnhancedTable = ({
     baseUrl = "https://moron-alert.com"
   }
 
+  const handleRowEditClick = (rowIndex) => {
+    setOpen(true);
+    setRowData(data[rowIndex]);
+  }
+
+  const handleRowClick = (row) => {
+    // console.log(row);
+    // row.toggleRowSelected(!row.isSelected)
+  }
+
   const [data, setTableData] = React.useState([]);
-  const [tableChanges, setTableChanges] = React.useState(0)
+  const [tableChanges, setTableChanges] = React.useState(0);
+  const [open, setOpen] = React.useState(false);
+  const [rowData, setRowData] = React.useState([]);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   // Gets the list of qna data
   React.useEffect(() => {
@@ -166,6 +193,7 @@ const EnhancedTable = ({
     setPageSize,
     preGlobalFilteredRows,
     setGlobalFilter,
+    selectedFlatRows,
     state: { pageIndex, pageSize, selectedRowIds, globalFilter },
   } = useTable(
     {
@@ -217,12 +245,12 @@ const EnhancedTable = ({
   const removeByIndexs = (array, indexs) =>
     array.filter((_, i) => !indexs.includes(i))
 
-  const deleteUserHandler = event => {
+  const deleteMultipleHandler = event => {
     const newData = removeByIndexs(
       data,
       Object.keys(selectedRowIds).map(x => parseInt(x, 10))
     )
-    setData(newData)
+    // setData(newData)
   }
 
   const addUserHandler = user => {
@@ -249,12 +277,12 @@ const EnhancedTable = ({
   // Render the UI for your table
   return (
     <Paper className={classes.root}>
-
+    
       <TableContainer>
 
         <TableToolbar
           numSelected={Object.keys(selectedRowIds).length}
-          deleteUserHandler={deleteUserHandler}
+          deleteUserHandler={deleteMultipleHandler}
           addUserHandler={addUserHandler}
           preGlobalFilteredRows={preGlobalFilteredRows}
           setGlobalFilter={setGlobalFilter}
@@ -294,7 +322,7 @@ const EnhancedTable = ({
             {headerGroups.map(headerGroup => (
               <TableRow {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map(column => (
-                  <TableCell style={{ width: 50, height: 50 }}
+                  <TableCell style={{ width: 100, height: 50 }}
                     {...(column.id === 'selection'
                       ? column.getHeaderProps()
                       : column.getHeaderProps(column.getSortByToggleProps()))}
@@ -309,6 +337,8 @@ const EnhancedTable = ({
                     ) : null}
                   </TableCell>
                 ))}
+                <TableCell style={{ width: 100, height: 50 }}>Edit </TableCell>
+                <TableCell style={{ width: 100, height: 50 }} >Delete</TableCell>
               </TableRow>
             ))}
 
@@ -317,14 +347,40 @@ const EnhancedTable = ({
             {page.map((row, i) => {
               prepareRow(row)
               return (
-                <TableRow hover {...row.getRowProps()}>
+                <TableRow onClick={() => handleRowClick(row)} hover {...row.getRowProps()}>
+                  {/* <TableCell padding='checkbox'>
+                    <Checkbox
+                      // checked={isItemSelected}
+                      // inputProps={{ 'aria-labelledby': labelId }}
+                    />
+                  </TableCell> */}
                   {row.cells.map(cell => {
                     return (
-                      <TableCell onClick={() => (console.log("click"))} {...cell.getCellProps()}>
+                      <TableCell {...cell.getCellProps()}>
                         {cell.render('Cell')}
                       </TableCell>
                     )
                   })}
+
+                  <TableCell>
+                    <IconButton
+                      onClick={() => handleRowEditClick(i)}
+                      color='primary'
+                      aria-label="delete">
+                      <EditIcon />
+                    </IconButton>
+
+                  </TableCell>
+                  <TableCell>
+                    <IconButton
+                      onClick={() => console.log("click delete", i)}
+                      color='secondary'
+                      aria-label="delete">
+                      <DeleteIcon />
+                    </IconButton>
+                  </TableCell>
+
+
                 </TableRow>
               )
             })}
@@ -336,6 +392,24 @@ const EnhancedTable = ({
 
         </MaUTable>
       </TableContainer>
+
+      <NewUnansweredDialog setTableData={setTableData} tableChanges={tableChanges} setTableChanges={setTableChanges} open={open} handleClose={handleClose} rowData={rowData} baseUrl={baseUrl} />
+
+
+      <pre>
+        <code>
+          {
+            JSON.stringify(
+              {
+                selectedFlatRows: selectedFlatRows.map(row => row.original),
+              },
+              null,
+              2
+            )
+          }
+        </code>
+      </pre>
+
 
     </Paper>
 
