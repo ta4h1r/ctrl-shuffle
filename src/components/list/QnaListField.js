@@ -63,7 +63,7 @@ export default function InteractiveList({
             primary={item}
           />
           <ListItemSecondaryAction>
-            <Tooltip arrow title="Delete is not yet supported">
+            <Tooltip arrow title="Delete item">
               <span>
               <IconButton disabled={false} onClick={() => handleClickDelete(item)} edge="end" aria-label="delete">
                 <DeleteIcon />

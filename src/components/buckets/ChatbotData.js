@@ -8,6 +8,9 @@ import Tab from '@material-ui/core/Tab';
 import NewQuestionButton from '../buttons/NewQuestionButton';
 import MemoryTable from '../tables/MemoryTable';
 import UnansweredTable from '../tables/UnansweredTable';
+import EnhancedTable from '../tables/EnhancedTable';
+
+// import RowSelection from '../tables/RowSelection';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -74,7 +77,7 @@ export default function ScrollableTabsButtonAuto() {
   const [tableState, setTableState] = React.useState({});
   const [state, setState] = React.useState({
     showDialog: false,
-  }); 
+  });
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -96,10 +99,65 @@ export default function ScrollableTabsButtonAuto() {
     onClick: handleClick,
   }
   const dialogProps = {
-    showDialog: state.showDialog, 
-    handleClose: handleClose, 
+    showDialog: state.showDialog,
+    handleClose: handleClose,
     tableState: tableState,
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  // const [data, setData] = React.useState(React.useMemo(() => makeData(20), []));
+  const [skipPageReset, setSkipPageReset] = React.useState(false)
+
+  // We need to keep the table from resetting the pageIndex when we
+  // Update data. So we can keep track of that flag with a ref.
+
+  // When our cell renderer calls updateMyData, we'll use
+  // the rowIndex, columnId and new value to update the
+  // original data
+  const updateMyData = (rowIndex, columnId, value) => {
+    // We also turn on the flag to not reset the page
+    setSkipPageReset(true)
+    setData(old =>
+      old.map((row, index) => {
+        if (index === rowIndex) {
+          return {
+            ...old[rowIndex],
+            [columnId]: value,
+          }
+        }
+        return row
+      })
+    )
+  }
+
+
+
+
+
+
+
+
+
+
+
 
   return (
     <>
@@ -128,10 +186,18 @@ export default function ScrollableTabsButtonAuto() {
 
         </AppBar>
         <TabPanel value={value} index={0}>
-          <MemoryTable liftTableState={setTableState}/>
+          <MemoryTable liftTableState={setTableState} />
         </TabPanel>
         <TabPanel value={value} index={1}>
-          <UnansweredTable liftTableState={setTableState} dialogProps={dialogProps} handleRowClick={handleClick}/>
+          {/* <UnansweredTable liftTableState={setTableState} dialogProps={dialogProps} handleRowClick={handleClick}/> */}
+          
+          <EnhancedTable
+            skipPageReset={skipPageReset}
+            liftTableState={setTableState} 
+            dialogProps={dialogProps} 
+            handleRowClick={handleClick}
+          />
+
         </TabPanel>
       </div>
 
