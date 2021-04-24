@@ -45,8 +45,8 @@ const TableToolbar = props => {
   const classes = useToolbarStyles()
   const {
     numSelected,
-    addUserHandler,
-    deleteUserHandler: deleteHandler,
+    // addUserHandler,
+    deleteHandler,
     preGlobalFilteredRows,
     setGlobalFilter,
     globalFilter
@@ -103,8 +103,8 @@ const TableToolbar = props => {
 
 TableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
-  addUserHandler: PropTypes.func.isRequired,
-  deleteUserHandler: PropTypes.func.isRequired,
+  // addUserHandler: PropTypes.func.isRequired,
+  deleteHandler: PropTypes.func.isRequired,
   setGlobalFilter: PropTypes.func.isRequired,
   preGlobalFilteredRows: PropTypes.array.isRequired,
   // globalFilter: PropTypes.string.isRequired,

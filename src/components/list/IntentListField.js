@@ -72,11 +72,11 @@ export default function InteractiveList({
                 <EditIcon />
               </IconButton>
             </Tooltip>
-            <Tooltip arrow title="Delete intent">
+            {/* <Tooltip arrow title="Delete intent">
               <IconButton onClick={() => handleClickDelete(item)} color="secondary" edge="end" aria-label="delete">
                 <DeleteIcon />
               </IconButton>
-            </Tooltip>
+            </Tooltip> */}
           </ListItemSecondaryAction>
         </ListItem>
       )

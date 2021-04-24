@@ -19,8 +19,11 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CheckIcon from '@material-ui/icons/Check';
 
-import { IconButton, TextField } from '@material-ui/core';
+import { IconButton, Snackbar } from '@material-ui/core';
 import NewUnansweredDialog from '../dialog/NewUnansweredDialog';
+
+import { Alert, AlertTitle } from '@material-ui/lab';
+import axios from 'axios';
 
 
 
@@ -34,6 +37,7 @@ import {
 
 import { makeStyles } from '@material-ui/core/styles';
 import GlobalFilter from './GlobalFilter'
+import { NativeBuffer } from 'mongoose'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -121,16 +125,99 @@ const EnhancedTable = ({
     baseUrl = "https://moron-alert.com"
   }
 
-  const handleRowEditClick = (rowIndex) => {
-    setOpen(true);
-    setRowData(data[rowIndex]);
-  }
 
   const handleRowClick = (row) => {
     // console.log(row);
     // row.toggleRowSelected(!row.isSelected)
   }
 
+  const handleRowEditClick = (rowIndex) => {
+    setOpen(true);
+    setRowData(data[rowIndex]);
+  }
+
+  const handleRowDeleteClick = (rowIndex) => {
+    showAlert('updating');
+
+    var qs = [];
+    qs.push(data[rowIndex].question);
+
+    //Removing empty strings 
+    var filtered_qs = qs.filter(function (el) {
+      return el != "";
+    });
+
+    const requestData = {
+      questions: filtered_qs,
+    }
+    axios.delete(`${baseUrl}`, {
+      data: requestData,
+    })
+      .then(() => {
+        fetchData()
+      })
+      .catch((err) => {
+        console.error(err);
+        showAlert('failed')
+      });
+  }
+
+  function fetchData() {
+    fetch(baseUrl, {
+      method: "get",
+      headers: { "Content-Type": "application/json" },
+    })
+      .then((response) => response.json())
+      .then((returnData) => {
+
+        let qnaData = returnData.data;
+        setTableChanges(qnaData);
+        setTableChanges(tableChanges + 1)
+        showAlert('deleteSuccess');
+      });
+  }
+
+  function showAlert(type) {
+    handleCloseSnackbar();
+    switch (type) {
+      case 'failed':
+        setSnackbarState({
+          showFailedUpdateAlert: true
+        })
+        break;
+      case 'updating':
+        setSnackbarState({
+          showUpdatingAlert: true
+        })
+        break;
+      case 'updated':
+        setSnackbarState({
+          showUpdatedAlert: true
+        })
+        break;
+      case 'deleteSuccess':
+        setSnackbarState({
+          showDeleteSuccessAlert: true
+        })
+        break;
+    }
+  }
+
+  function handleCloseSnackbar() {
+    setSnackbarState({
+      showDeleteSuccessAlert: false,
+      showUpdatedAlert: false,
+      showUpdatingAlert: false,
+      showFailedUpdateAlert: false,
+    })
+  }
+
+  const [snackbarState, setSnackbarState] = React.useState({
+    showDeleteSuccessAlert: false,
+    showUpdatedAlert: false,
+    showUpdatingAlert: false,
+    showFailedUpdateAlert: false,
+  })
   const [data, setTableData] = React.useState([]);
   const [tableChanges, setTableChanges] = React.useState(0);
   const [open, setOpen] = React.useState(false);
@@ -242,21 +329,56 @@ const EnhancedTable = ({
     setPageSize(Number(event.target.value))
   }
 
-  const removeByIndexs = (array, indexs) =>
-    array.filter((_, i) => !indexs.includes(i))
+  const handleMultipleDeleteClick = (rowIndexes) => {
+    showAlert('updating');
+
+    console.log(rowIndexes);
+
+    var qs = [];
+    for (var i = 0, n = rowIndexes.length; i < n; i++) {
+      qs.push(data[rowIndexes[i]].question);
+
+      //Removing empty strings 
+      var filtered_qs = qs.filter(function (el) {
+        return el != "";
+      });
+
+    }
+
+    console.log(qs)
+
+    const requestData = {
+      questions: filtered_qs,
+    }
+
+    console.log(requestData)
+
+    axios.delete(`${baseUrl}`, {
+      data: requestData,
+    })
+      .then(() => {
+        fetchData()
+      })
+      .catch((err) => {
+        console.error(err);
+        showAlert('failed')
+      });
+      
+  }
 
   const deleteMultipleHandler = event => {
-    const newData = removeByIndexs(
-      data,
-      Object.keys(selectedRowIds).map(x => parseInt(x, 10))
-    )
-    // setData(newData)
+    var rowsToDelete = Object.keys(selectedRowIds);
+    for (var i = 0, n = rowsToDelete.length; i < n; i++) {
+      try {
+        rowsToDelete[i] = (Number(rowsToDelete[i]));
+      } catch (e) {
+        console.log(e)
+        showAlert('failed');
+      }
+    }
+    handleMultipleDeleteClick(rowsToDelete)
   }
 
-  const addUserHandler = user => {
-    const newData = data.concat([user])
-    setData(newData)
-  }
 
 
 
@@ -277,13 +399,13 @@ const EnhancedTable = ({
   // Render the UI for your table
   return (
     <Paper className={classes.root}>
-    
+
       <TableContainer>
 
         <TableToolbar
           numSelected={Object.keys(selectedRowIds).length}
-          deleteUserHandler={deleteMultipleHandler}
-          addUserHandler={addUserHandler}
+          deleteHandler={deleteMultipleHandler}
+          // addUserHandler={addUserHandler}
           preGlobalFilteredRows={preGlobalFilteredRows}
           setGlobalFilter={setGlobalFilter}
           globalFilter={globalFilter}
@@ -373,7 +495,7 @@ const EnhancedTable = ({
                   </TableCell>
                   <TableCell>
                     <IconButton
-                      onClick={() => console.log("click delete", i)}
+                      onClick={() => handleRowDeleteClick(i)}
                       color='secondary'
                       aria-label="delete">
                       <DeleteIcon />
@@ -393,7 +515,34 @@ const EnhancedTable = ({
         </MaUTable>
       </TableContainer>
 
+
       <NewUnansweredDialog setTableData={setTableData} tableChanges={tableChanges} setTableChanges={setTableChanges} open={open} handleClose={handleClose} rowData={rowData} baseUrl={baseUrl} />
+
+
+      <Snackbar open={snackbarState.showUpdatingAlert} onClose={handleCloseSnackbar}>
+        <Alert severity="info">
+          <AlertTitle>Info</AlertTitle>
+                            Updating data...
+                    </Alert>
+      </Snackbar>
+      <Snackbar open={snackbarState.showDeleteSuccessAlert} autoHideDuration={2000} onClose={handleCloseSnackbar}>
+        <Alert severity="success">
+          <AlertTitle>Success</AlertTitle>
+                            Successfully deleted.
+                    </Alert>
+      </Snackbar>
+      <Snackbar open={snackbarState.showUpdatedAlert} autoHideDuration={2000} onClose={handleCloseSnackbar}>
+        <Alert severity="success">
+          <AlertTitle>Success</AlertTitle>
+                            Successfully updated.
+                    </Alert>
+      </Snackbar>
+      <Snackbar open={snackbarState.showFailedUpdateAlert} autoHideDuration={2000} onClose={handleCloseSnackbar}>
+        <Alert severity="error">
+          <AlertTitle>Error</AlertTitle>
+                            Failed to update.
+                    </Alert>
+      </Snackbar>
 
 
       <pre>
