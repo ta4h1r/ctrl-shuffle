@@ -20,12 +20,10 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import CheckIcon from '@material-ui/icons/Check';
 
 import { IconButton, Snackbar } from '@material-ui/core';
-import NewUnansweredDialog from '../dialog/NewUnansweredDialog';
+import QnaDialogue from '../dialog/EditQnaDialog';
 
 import { Alert, AlertTitle } from '@material-ui/lab';
 import axios from 'axios';
-
-
 
 import {
   useGlobalFilter,
@@ -38,6 +36,8 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import GlobalFilter from './GlobalFilter'
 import { NativeBuffer } from 'mongoose'
+
+import DeleteAlertDialog from '../dialog/DeleteAlertDialog';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -95,7 +95,6 @@ const IndeterminateCheckbox = React.forwardRef(
 const EnhancedTable = ({
   // setData,
   skipPageReset,
-
   liftTableState,
   dialogProps,
   // handleRowClick,
@@ -106,8 +105,16 @@ const EnhancedTable = ({
   const columns = React.useMemo(
     () => [
       {
-        Header: 'Question',
-        accessor: 'question',
+        Header: 'Intent',
+        accessor: 'intent',
+      },
+      {
+        Header: 'Questions',
+        accessor: 'questions',
+      },
+      {
+        Header: 'Answers',
+        accessor: 'answers',
       }
     ],
     []
@@ -119,7 +126,7 @@ const EnhancedTable = ({
   var apiList;
   try {
     apiList = JSON.parse(sessionStorage.getItem("API"));
-    baseUrl = apiList.unanswered_handler;
+    baseUrl = apiList.web_ui_handler;
   } catch (e) {
     console.error(e);
     baseUrl = "https://moron-alert.com"
@@ -132,35 +139,38 @@ const EnhancedTable = ({
   }
 
   const handleRowEditClick = (rowIndex) => {
+    const absoluteRowIndex = rowIndex + pageSize * pageIndex;
     setOpen(true);
-    setRowData(data[rowIndex]);
+    setRowData(data[absoluteRowIndex]);
   }
 
   const handleRowDeleteClick = (rowIndex) => {
+    const absoluteRowIndex = rowIndex + pageSize * pageIndex;
+    setIntentToDelete(data[absoluteRowIndex].intent);
+    setShowDeleteAlertDialog(true);
+  }
+
+  function onDelete(ev) {
+    ev.preventDefault();  //to stop the form submitting
     showAlert('updating');
-
-    var qs = [];
-    qs.push(data[rowIndex].question);
-
-    //Removing empty strings 
-    var filtered_qs = qs.filter(function (el) {
-      return el != "";
-    });
-
-    const requestData = {
-      questions: filtered_qs,
-    }
-    axios.delete(`${baseUrl}`, {
-      data: requestData,
-    })
+    const originalIntent = intentToDelete;
+    console.log(originalIntent); 
+    axios.delete(`${baseUrl}/${originalIntent}`, null)
       .then(() => {
         fetchData()
+        showAlert('deleteSuccess');
       })
-      .catch((err) => {
-        console.error(err);
+      .catch(() => {
         showAlert('failed')
       });
+
+    closeDeleteAlertDialog();
   }
+
+  function closeDeleteAlertDialog() {
+    setShowDeleteAlertDialog(false);
+  }
+
 
   function fetchData() {
     fetch(baseUrl, {
@@ -222,6 +232,10 @@ const EnhancedTable = ({
   const [tableChanges, setTableChanges] = React.useState(0);
   const [open, setOpen] = React.useState(false);
   const [rowData, setRowData] = React.useState([]);
+
+  const [intentToDelete, setIntentToDelete] = React.useState('');
+  const [deleteMessage, setDeleteMessage] = React.useState('If an intent is deleted, all associated question and answer data will be lost. Proceed?')
+  const [showDeleteAlertDialog, setShowDeleteAlertDialog] = React.useState(false);
 
   const handleClose = () => {
     setOpen(false);
@@ -295,27 +309,27 @@ const EnhancedTable = ({
     hooks => {
       hooks.visibleColumns.push(columns => [
         // Let's make a column for selection
-        {
-          id: 'selection',
-          // The header can use the table's getToggleAllRowsSelectedProps method
-          // to render a checkbox.  Pagination is a problem since this will select all
-          // rows even though not all rows are on the current page.  The solution should
-          // be server side pagination.  For one, the clients should not download all
-          // rows in most cases.  The client should only download data for the current page.
-          // In that case, getToggleAllRowsSelectedProps works fine.
-          Header: ({ getToggleAllRowsSelectedProps }) => (
-            <div>
-              <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
-            </div>
-          ),
-          // The cell can use the individual row's getToggleRowSelectedProps method
-          // to render a checkbox
-          Cell: ({ row }) => (
-            <div>
-              <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
-            </div>
-          ),
-        },
+        // {
+        //   id: 'selection',
+        //   // The header can use the table's getToggleAllRowsSelectedProps method
+        //   // to render a checkbox.  Pagination is a problem since this will select all
+        //   // rows even though not all rows are on the current page.  The solution should
+        //   // be server side pagination.  For one, the clients should not download all
+        //   // rows in most cases.  The client should only download data for the current page.
+        //   // In that case, getToggleAllRowsSelectedProps works fine.
+        //   Header: ({ getToggleAllRowsSelectedProps }) => (
+        //     <div>
+        //       <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
+        //     </div>
+        //   ),
+        //   // The cell can use the individual row's getToggleRowSelectedProps method
+        //   // to render a checkbox
+        //   Cell: ({ row }) => (
+        //     <div>
+        //       <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+        //     </div>
+        //   ),
+        // },
         ...columns,
       ])
     }
@@ -363,7 +377,7 @@ const EnhancedTable = ({
         console.error(err);
         showAlert('failed')
       });
-      
+
   }
 
   const deleteMultipleHandler = event => {
@@ -444,7 +458,7 @@ const EnhancedTable = ({
             {headerGroups.map(headerGroup => (
               <TableRow {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map(column => (
-                  <TableCell style={{ width: 100, height: 50 }}
+                  <TableCell style={{ width: 50 }}
                     {...(column.id === 'selection'
                       ? column.getHeaderProps()
                       : column.getHeaderProps(column.getSortByToggleProps()))}
@@ -459,8 +473,8 @@ const EnhancedTable = ({
                     ) : null}
                   </TableCell>
                 ))}
-                <TableCell style={{ width: 100, height: 50 }}>Edit </TableCell>
-                <TableCell style={{ width: 100, height: 50 }} >Delete</TableCell>
+                <TableCell style={{ width: 50 }}>Edit </TableCell>
+                <TableCell style={{ width: 50 }} >Delete</TableCell>
               </TableRow>
             ))}
 
@@ -470,21 +484,15 @@ const EnhancedTable = ({
               prepareRow(row)
               return (
                 <TableRow onClick={() => handleRowClick(row)} hover {...row.getRowProps()}>
-                  {/* <TableCell padding='checkbox'>
-                    <Checkbox
-                      // checked={isItemSelected}
-                      // inputProps={{ 'aria-labelledby': labelId }}
-                    />
-                  </TableCell> */}
                   {row.cells.map(cell => {
                     return (
-                      <TableCell {...cell.getCellProps()}>
+                      <TableCell style={{ width: 500 }} {...cell.getCellProps()}>
                         {cell.render('Cell')}
                       </TableCell>
                     )
                   })}
 
-                  <TableCell>
+                  <TableCell style={{ width: 50 }}>
                     <IconButton
                       onClick={() => handleRowEditClick(i)}
                       color='primary'
@@ -493,7 +501,7 @@ const EnhancedTable = ({
                     </IconButton>
 
                   </TableCell>
-                  <TableCell>
+                  <TableCell style={{ width: 50 }}>
                     <IconButton
                       onClick={() => handleRowDeleteClick(i)}
                       color='secondary'
@@ -516,7 +524,9 @@ const EnhancedTable = ({
       </TableContainer>
 
 
-      <NewUnansweredDialog setTableData={setTableData} tableChanges={tableChanges} setTableChanges={setTableChanges} open={open} handleClose={handleClose} rowData={rowData} baseUrl={baseUrl} />
+      <QnaDialogue setTableData={setTableData} tableChanges={tableChanges} setTableChanges={setTableChanges} open={open} handleClose={handleClose} rowData={rowData} baseUrl={baseUrl} />
+
+      <DeleteAlertDialog deleteMessage={deleteMessage} handleDelete={onDelete} showDialog={showDeleteAlertDialog} handleClose={closeDeleteAlertDialog} />
 
 
       <Snackbar open={snackbarState.showUpdatingAlert} onClose={handleCloseSnackbar}>
@@ -543,22 +553,6 @@ const EnhancedTable = ({
                             Failed to update.
                     </Alert>
       </Snackbar>
-
-
-      <pre>
-        <code>
-          {
-            JSON.stringify(
-              {
-                selectedFlatRows: selectedFlatRows.map(row => row.original),
-              },
-              null,
-              2
-            )
-          }
-        </code>
-      </pre>
-
 
     </Paper>
 

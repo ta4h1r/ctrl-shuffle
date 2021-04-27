@@ -8,9 +8,12 @@ import IconButton from '@material-ui/core/IconButton';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
 import { Tooltip } from '@material-ui/core';
 
 import NewField from '../fields/NewField';
+
+import EditListField from '../fields/EditField'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,33 +44,67 @@ function capitalizeFirstLetterAndAddS(string) {
 }
 
 
-export default function InteractiveList({ 
+export default function InteractiveList({
   category,
   data,
   handleClickDelete,
   handleClickAddNew,
   onFieldChange,
-  fieldValue }) {
+  fieldValue,
+
+  activeIndex,
+  setActiveIndex,
+  handleClickEdit,
+  fieldVal,
+  onEditFieldChange,
+  onFieldSubmit }) {
 
   const classes = useStyles();
   const [state, setState] = React.useState({
     listJsx: [],
   });
 
+
+  function handleClickClearEditField() {
+    setActiveIndex(null)
+  }
+  function handleClickSubmitEditField() {
+    onFieldSubmit()
+    setActiveIndex(null)
+  }
+
+
   React.useEffect(() => {
     let dataList = data.map((item, index) => {
 
       return (
         <ListItem key={`${category}-no-${index}`}>
-          <ListItemText
-            primary={item}
-          />
+          {index == activeIndex ? (
+            <EditListField
+              handleClickClear={handleClickClearEditField}
+              category={category}
+              onChange={onEditFieldChange}
+              handleClickAddNew={handleClickSubmitEditField}
+              fieldValue={fieldVal}
+            />
+          ) : (
+            <ListItemText
+              primary={item}
+            />
+          )}
           <ListItemSecondaryAction>
+            <Tooltip arrow title="Edit item">
+              <span style={{ marginLeft: 10 }}>
+                <IconButton disabled={false} onClick={() => handleClickEdit(index)} edge="end" aria-label="delete">
+                  <EditIcon />
+                </IconButton>
+              </span>
+            </Tooltip>
             <Tooltip arrow title="Delete item">
               <span>
-              <IconButton disabled={false} onClick={() => handleClickDelete(item)} edge="end" aria-label="delete">
-                <DeleteIcon />
-              </IconButton>
+                <IconButton disabled={false} onClick={() => handleClickDelete(item)} edge="end" aria-label="delete">
+                  <DeleteIcon />
+                </IconButton>
               </span>
             </Tooltip>
           </ListItemSecondaryAction>
@@ -80,7 +117,7 @@ export default function InteractiveList({
       listJsx: dataList,
     });
 
-  }, [data]);
+  }, [activeIndex, data, fieldVal]);
 
 
   return (
@@ -89,7 +126,7 @@ export default function InteractiveList({
       <Grid item xs={12} md={12}>
         <Typography variant="h6" className={classes.title}>
           {capitalizeFirstLetterAndAddS(category)}
-          </Typography>
+        </Typography>
         <div className={classes.demo}>
           <List dense>
 
@@ -100,7 +137,7 @@ export default function InteractiveList({
           <div className={classes.addNewTextField}>
 
             <NewField
-              category={category} 
+              category={category}
               onChange={onFieldChange}
               handleClickAddNew={handleClickAddNew}
               fieldValue={fieldValue}

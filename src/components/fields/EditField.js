@@ -38,7 +38,7 @@ export default function EditIntentField({
                 autoFocus
                 margin="dense"
                 id={`${category}-field`}
-                label={category == 'name' ? `New ${category}` : `New ${category} name`}
+                label={(category == 'name' || category == 'question' || category == 'answer') ? `New ${category}` : `New ${category} name`}
                 fullWidth
                 controlled="true"
             />
@@ -52,6 +52,7 @@ export default function EditIntentField({
             </IconButton>
             
             <IconButton
+                style={{marginRight: 80}}
                 onClick={handleClickClear}
                 color='primary'
                 size='small'

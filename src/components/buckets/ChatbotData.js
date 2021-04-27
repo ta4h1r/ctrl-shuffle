@@ -7,8 +7,8 @@ import Tab from '@material-ui/core/Tab';
 
 import NewQuestionButton from '../buttons/NewQuestionButton';
 import MemoryTable from '../tables/MemoryTable';
-import UnansweredTable from '../tables/UnansweredTable';
-import EnhancedTable from '../tables/EnhancedTable';
+import EnhancedMemoryTable from '../tables/EnhancedMemoryTable';
+import EnhancedUnansweredTable from '../tables/EnhancedUnansweredTable';
 
 // import RowSelection from '../tables/RowSelection';
 
@@ -121,7 +121,7 @@ export default function ScrollableTabsButtonAuto() {
 
 
 
-  
+
 
   // const [data, setData] = React.useState(React.useMemo(() => makeData(20), []));
   const [skipPageReset, setSkipPageReset] = React.useState(false)
@@ -186,18 +186,20 @@ export default function ScrollableTabsButtonAuto() {
 
         </AppBar>
         <TabPanel value={value} index={0}>
-          <MemoryTable liftTableState={setTableState} />
+          {/* <MemoryTable liftTableState={setTableState} /> */}
+          <EnhancedMemoryTable
+            skipPageReset={skipPageReset}
+            liftTableState={setTableState}
+            dialogProps={dialogProps}
+            handleRowClick={handleClick} />
         </TabPanel>
         <TabPanel value={value} index={1}>
-          {/* <UnansweredTable liftTableState={setTableState} dialogProps={dialogProps} handleRowClick={handleClick}/> */}
-          
-          <EnhancedTable
+          <EnhancedUnansweredTable
             skipPageReset={skipPageReset}
-            liftTableState={setTableState} 
-            dialogProps={dialogProps} 
+            liftTableState={setTableState}
+            dialogProps={dialogProps}
             handleRowClick={handleClick}
           />
-
         </TabPanel>
       </div>
 
