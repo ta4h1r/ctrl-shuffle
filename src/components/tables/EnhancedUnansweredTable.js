@@ -93,12 +93,8 @@ const IndeterminateCheckbox = React.forwardRef(
 )
 
 const EnhancedTable = ({
-  // setData,
   skipPageReset,
-
   liftTableState,
-  dialogProps,
-  // handleRowClick,
 }) => {
 
 
@@ -108,6 +104,10 @@ const EnhancedTable = ({
       {
         Header: 'Question',
         accessor: 'question',
+      },
+      {
+        Header: 'Created',
+        accessor: 'create_date',
       }
     ],
     []
@@ -132,17 +132,16 @@ const EnhancedTable = ({
   }
 
   const handleRowEditClick = (rowIndex) => {
-    const absoluteRowIndex = rowIndex + pageSize*pageIndex;
+    // const absoluteRowIndex = rowIndex + pageSize*pageIndex;
     setOpen(true);
-    setRowData(data[absoluteRowIndex]);
+    setRowData(data[rowIndex]);
   }
 
   const handleRowDeleteClick = (rowIndex) => {
     showAlert('updating');
 
-    const absoluteRowIndex = rowIndex + pageSize*pageIndex;
     var qs = [];
-    qs.push(data[absoluteRowIndex].question);
+    qs.push(data[rowIndex].question);
 
     //Removing empty strings 
     var filtered_qs = qs.filter(function (el) {
@@ -241,7 +240,8 @@ const EnhancedTable = ({
         .then((returnData) => {
 
           let qnaData = returnData.data;
-          setTableData(qnaData);
+          let sortedtQnAData = sortByKey(qnaData, "create_date");
+          setTableData(sortedtQnAData.reverse());
 
           liftTableState({
             tableChanges: tableChanges,
@@ -252,6 +252,13 @@ const EnhancedTable = ({
     }
 
     fetchData();
+
+    function sortByKey(array, key) {
+      return array.sort(function (a, b) {
+        var x = a[key]; var y = b[key];
+        return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+      });
+    }
 
   }, [tableChanges]);
 
@@ -334,7 +341,7 @@ const EnhancedTable = ({
   const handleMultipleDeleteClick = (rowIndexes) => {
     showAlert('updating');
 
-    console.log(rowIndexes);
+    // console.log(rowIndexes);
 
     var qs = [];
     for (var i = 0, n = rowIndexes.length; i < n; i++) {
@@ -347,7 +354,7 @@ const EnhancedTable = ({
 
     }
 
-    console.log(qs)
+    // console.log(qs)
 
     const requestData = {
       questions: filtered_qs,
@@ -407,7 +414,6 @@ const EnhancedTable = ({
         <TableToolbar
           numSelected={Object.keys(selectedRowIds).length}
           deleteHandler={deleteMultipleHandler}
-          // addUserHandler={addUserHandler}
           preGlobalFilteredRows={preGlobalFilteredRows}
           setGlobalFilter={setGlobalFilter}
           globalFilter={globalFilter}
@@ -467,6 +473,7 @@ const EnhancedTable = ({
             ))}
 
           </TableHead>
+          
           <TableBody>
             {page.map((row, i) => {
               prepareRow(row)
@@ -488,7 +495,7 @@ const EnhancedTable = ({
 
                   <TableCell>
                     <IconButton
-                      onClick={() => handleRowEditClick(i)}
+                      onClick={() => handleRowEditClick(row.index)}
                       color='primary'
                       aria-label="delete">
                       <EditIcon />
@@ -497,7 +504,7 @@ const EnhancedTable = ({
                   </TableCell>
                   <TableCell>
                     <IconButton
-                      onClick={() => handleRowDeleteClick(i)}
+                      onClick={() => handleRowDeleteClick(row.index)}
                       color='secondary'
                       aria-label="delete">
                       <DeleteIcon />
@@ -546,20 +553,6 @@ const EnhancedTable = ({
                     </Alert>
       </Snackbar>
 
-
-      <pre>
-        <code>
-          {
-            JSON.stringify(
-              {
-                selectedFlatRows: selectedFlatRows.map(row => row.original),
-              },
-              null,
-              2
-            )
-          }
-        </code>
-      </pre>
 
 
     </Paper>
