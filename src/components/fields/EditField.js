@@ -32,6 +32,7 @@ export default function EditIntentField({
         <div className={classes.root}>
             <TextField
                 required
+                multiline
                 size='small'
                 onChange={onChange}
                 value={fieldValue}

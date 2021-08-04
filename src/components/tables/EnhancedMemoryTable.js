@@ -143,9 +143,9 @@ const EnhancedTable = ({
   }
 
   const handleRowEditClick = (rowIndex) => {
-    const absoluteRowIndex = rowIndex + pageSize * pageIndex;
+    // const absoluteRowIndex = rowIndex + pageSize * pageIndex;
     setOpen(true);
-    setRowData(data[absoluteRowIndex]);
+    setRowData(data[rowIndex]);
   }
 
   const handleRowDeleteClick = (rowIndex) => {
@@ -414,7 +414,7 @@ const EnhancedTable = ({
 
 
 
-
+  const [sorted, setSorted] = React.useState([])
 
 
 
@@ -446,9 +446,9 @@ const EnhancedTable = ({
           <TablePagination
             rowsPerPageOptions={[
               10,
-              20,
-              50,
-              { label: 'All', value: data.length },
+              100,
+              500,
+              1000,
             ]}
             colSpan={0}
             count={data.length}
@@ -470,11 +470,16 @@ const EnhancedTable = ({
             {headerGroups.map(headerGroup => (
               <TableRow {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map(column => (
+                  
                   <TableCell style={{ width: 50 }}
                     {...(column.id === 'selection'
                       ? column.getHeaderProps()
-                      : column.getHeaderProps(column.getSortByToggleProps()))}
+                      : column.getHeaderProps(column.getSortByToggleProps())
+                      )
+                    }
                   >
+                    
+                    {console.log(column.id, column.isSorted, column.isSortedDesc, column.getSortByToggleProps())}
                     {column.render('Header')}
                     {column.id !== 'selection' ? (
                       <TableSortLabel
@@ -484,6 +489,7 @@ const EnhancedTable = ({
                       />
                     ) : null}
                   </TableCell>
+
                 ))}
                 <TableCell style={{ width: 50 }}>Edit </TableCell>
                 <TableCell style={{ width: 50 }} >Delete</TableCell>

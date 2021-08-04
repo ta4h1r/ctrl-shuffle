@@ -429,9 +429,9 @@ const EnhancedTable = ({
           <TablePagination
             rowsPerPageOptions={[
               10,
-              20,
-              50,
-              { label: 'All', value: data.length },
+              100,
+              500,
+              1000,
             ]}
             colSpan={0}
             count={data.length}

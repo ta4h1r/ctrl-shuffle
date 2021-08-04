@@ -61,6 +61,17 @@ class FormFields extends Component {
 
         this.handleCloseSnackbar = this.handleCloseSnackbar.bind(this);
 
+        this.handleClickEditListFieldQ = this.handleClickEditListFieldQ.bind(this);
+        this.handleClickEditListFieldA = this.handleClickEditListFieldA.bind(this);
+
+        this.setActiveIndexQ = this.setActiveIndexQ.bind(this)
+        this.setActiveIndexA = this.setActiveIndexA.bind(this)
+        
+        this.onEditFieldChangeQ = this.onEditFieldChangeQ.bind(this)
+        this.onEditFieldChangeA = this.onEditFieldChangeA.bind(this)
+        this.onQuestionsChanged = this.onQuestionsChanged.bind(this)
+        this.onAnswersChanged = this.onAnswersChanged.bind(this);
+
         this.state = {
             handleClose: this.props.closeDialogFunction,
             questionData: [],
@@ -71,6 +82,11 @@ class FormFields extends Component {
             i: '',
             showDeleteAlertDialog: false,
             showEditField: true,
+
+            activeIndexQ: null,
+            activeIndexA: null,
+            activeValA: '',
+            activeValQ: '',
         };
     }
 
@@ -296,6 +312,89 @@ class FormFields extends Component {
     }
 
 
+
+
+    handleClickEditListFieldQ(index) {
+        // console.log("handleClickEditListFieldQ: index: " + index);
+        this.setState({
+            activeIndexQ: index,
+            activeValQ: this.state.questionData[index]
+        });
+    }
+    handleClickEditListFieldA(index) {
+        // console.log("handleClickEditListFieldA: index: " + index);
+        this.setState({
+            activeIndexA: index,
+            activeValA: this.state.answerData[index]
+        });
+    }
+    setActiveIndexQ(index) {
+        this.setState({
+            activeIndexQ: index
+        })
+    }
+    setActiveIndexA(index) {
+        this.setState({
+            activeIndexA: index
+        })
+    }
+    onEditFieldChangeQ(e) {
+        const newFieldVal = e.target.value;
+        console.log(newFieldVal);
+        this.setState({
+            activeValQ: newFieldVal,
+        })
+    }
+    onEditFieldChangeA(e) {
+        const newFieldVal = e.target.value;
+        this.setState({
+            activeValA: newFieldVal,
+        })
+    }
+    onQuestionsChanged() {
+        const activeIndex = this.state.activeIndexQ;
+        if (this.state.activeValQ) {
+            const questionToAdd = this.state.activeValQ
+            var newQuestionData = [];
+            this.state.questionData.forEach((item, index) => {
+                if(index == activeIndex) {
+                    newQuestionData.push('');          // Use a placeholder
+                } else {
+                    newQuestionData.push(item);       // Add all other questions
+                }
+            })
+            newQuestionData[activeIndex] = questionToAdd;   // Add new data into the placeholder
+            this.setState({
+                questionData: newQuestionData,
+            })
+        }
+    }
+    onAnswersChanged() {
+        const activeIndex = this.state.activeIndexA;
+        if (this.state.activeValA) {
+            const answerToAdd = this.state.activeValA
+            var newAnswerData = [];
+            this.state.answerData.forEach((item, index) => {
+                if(index == activeIndex) {
+                    newAnswerData.push('');                 // Use a placeholder
+                } else {
+                    newAnswerData.push(item);       // Add all other questions
+                }
+            })
+            newAnswerData[activeIndex] = answerToAdd;           // Add new data into the placeholder
+            this.setState({
+                answerData: newAnswerData,
+            })
+        }
+    }
+
+
+
+
+
+
+
+
     render() {
 
         const { classes } = this.props;
@@ -313,6 +412,13 @@ class FormFields extends Component {
                         handleClickAddNew={this.handleClickAddNewQuestionToList}
                         onFieldChange={this.onChangeQuestion}
                         fieldValue={this.state.q}
+
+                        activeIndex={this.state.activeIndexQ}
+                        setActiveIndex={this.setActiveIndexQ}
+                        handleClickEdit={this.handleClickEditListFieldQ}
+                        fieldVal={this.state.activeValQ}
+                        onEditFieldChange={this.onEditFieldChangeQ}
+                        onFieldSubmit={this.onQuestionsChanged}
                     />
 
                 </div>
@@ -327,6 +433,13 @@ class FormFields extends Component {
                         handleClickAddNew={this.handleClickAddNewAnswerToList}
                         onFieldChange={this.onChangeAnswer}
                         fieldValue={this.state.a}
+
+                        activeIndex={this.state.activeIndexA}
+                        setActiveIndex={this.setActiveIndexA}
+                        handleClickEdit={this.handleClickEditListFieldA}
+                        fieldVal={this.state.activeValA}
+                        onEditFieldChange={this.onEditFieldChangeA}
+                        onFieldSubmit={this.onAnswersChanged}
                     />
 
                 </div>

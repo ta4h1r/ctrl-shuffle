@@ -124,7 +124,7 @@ export default function ScrollableTabsButtonAuto() {
 
 
   // const [data, setData] = React.useState(React.useMemo(() => makeData(20), []));
-  const [skipPageReset, setSkipPageReset] = React.useState(false)
+  const [skipPageReset, setSkipPageReset] = React.useState(true)
 
   // We need to keep the table from resetting the pageIndex when we
   // Update data. So we can keep track of that flag with a ref.
